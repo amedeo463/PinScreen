@@ -4,13 +4,13 @@ PREFIX = builds/PinScreen-
 REQUESTS_C = ./libpinsc/requests.c
 TEMP = ./temp
 
-COMPILER = 
-OS_CLASS = 
-PLATFORM = 
-
+# All things that need to be built
+BUILD_TARGETS = $(PREFIX)linux-x86_64 \
+                $(PREFIX)windows-x86_64.exe
+#
 
 # Main
-all: prepwork $(PREFIX)Linux-x86_64 $(PREFIX)Windows.exe
+all: prepwork $(BUILD_TARGETS)
 	@echo Nothing left to do, quitting
 #
 
@@ -31,33 +31,45 @@ $(REQUESTS_C):
 	@git clone https://github.com/mactul/requests.c.git $(REQUESTS_C)
 	
 	@# Oh dear (remove the .git folder as it's useless)
-	@rm -rf $@.git
+	@rm -rf $@/.git
+
+	@sed -i 's/defined(_WIN32) || defined(WIN32)/defined(WINDOWS)/g' $(REQUESTS_C)/*.c
 #
 ## ##
 
 
 ## Build targets ##
 #TODO: Add support for FreeBSD and maybe OpenBSD and NetBSD. Also add support for TON of architectures.
+# Build macro
+define BUILD_BIN
+# $(1): final part of the file
+# $(2): OS class 
+# $(3): OS with architecture
+# $(4): Compiler invoke
 
-# Linux
-$(PREFIX)Linux-x86_64: COMPILER = x86_64-linux-gnu-g++ \
-                       OS_CLASS = LINUX \
-                       PLATFORM = Linux-x86_64
-					   EXT = 
+# Build binary
+$(PREFIX)$(1): $(TEMP)/$(3)/requests.a
+	@echo building for platform $(3)
+	@$(4) main.cpp $$^ -o $$@ -D $(2) -static
 #
-# Windows
-$(PREFIX)Windows-x86_64.exe: COMPILER = x86_64-w64-mingw32-g++-posix \
-                             OS_CLASS = WINDOWS \
-                             PLATFORM = Windows
-					         EXT = .exe
+# Link library together
+$(TEMP)/$(3)/requests.a: $(TEMP)/$(3)/requests.o $(TEMP)/$(3)/utils.o $(TEMP)/$(3)/easy_tcp_tls.o $(TEMP)/$(3)/parser_tree.o
+	@mkdir $(@D)
+	@echo linking into $@
+	@ar cr $@ $^
+#
+# Compile C files into objects
+$(TEMP)/$(3)/%.o: $(REQUESTS_C)/%.c
+	@echo Compiling $^ to $@
+	@$(4) -c $^ -o $@ -Wall -Wextra -pedantic -O3 -DNDEBUG -I $(REQUESTS_C)/
+#
+endef
 #
 
-# Common script for building all PC builds
-$(PREFIX)%$(EXT): $(TEMP)/$(PLATFORM)/requests.a
-	@echo building for platform $(PLATFORM)...
-	@$(COMPILER) main.cpp $^ -o $@ -D $(OS_CLASS) -static
+# Build macro calls for each build
+$(eval $(call BUILD_BIN,linux-x86_64,LINUX,linux-x86_64,x86_64-linux-gnu-g++))
+$(eval $(call BUILD_BIN,windows-x86_64.exe,WINDOWS,windows-x86_64,x86_64-linux-gnu-g++-win32))
 #
-
 ## ##
 
 ## Other targets ##
@@ -75,17 +87,9 @@ buildcleanup:
 fullcleanup: cleanup buildcleanup
 #
 
-# Link library
-$(TEMP)/%/requests.a: $(TEMP)/%/requests.o $(TEMP)/%/utils.o $(TEMP)/%/easy_tcp_tls.o $(TEMP)/%/parser_tree.o
-	@mkdir $(@D)
-	@echo linking into $@
-	@ar cr $@ $^
-#
-
-# Compile C files into objects
-$(TEMP)/$(PLATFORM)/%.o: $(REQUESTS_C)/%.c
-	@sed -i 's/defined(_WIN32) || defined(WIN32)/defined(WINDOWS)/g' $^
-	@echo Compiling $^ to $@
-	@$(COMPILER) -c $^ -o $@ -Wall -Wextra -pedantic -O3 -DNDEBUG -I $(REQUESTS_C)
-#
 ## ##
+
+
+# phony targets
+.PHONY: cleanup buildcleanup fullcleanup all prepwork
+#

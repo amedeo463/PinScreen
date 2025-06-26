@@ -9,7 +9,7 @@
 // common.hpp, included by every platform-specific header file, already includes iostream. Don't panic.
 #if defined(WINDOWS)
 #include "PC.hpp"
-#elif defined(LINUX)
+#elif defined(LINUX) || defined(BSD)
 #include "PC.hpp"
 #elif defined(N3DS)
 #include "console.hpp" // still TODO

@@ -3,13 +3,8 @@
 #include "common.hpp"
 #include "requests.c/requests.h"
 
-#if defined(WINDOWS)
-#else // Linux/MacOS
-#endif
-
 // initialize values
 const string BUTTON_CONFIRM = "[RETURN]";
-const int DOWNLOAD_BUFFER = 4096;
 
 // miscellaneous functions and values
 class p_misc {
@@ -20,6 +15,6 @@ class p_misc {
         }
 
         int download(string URL, string saveas) {
-            return 0;
+            req_get();
         }
 };
