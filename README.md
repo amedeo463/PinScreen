@@ -35,9 +35,9 @@ more modular.
   - ATTRMSEL
   - ADDATTR
   - REMATTR
-  - STOP
-  - ESTOP
-  - NOTHING
+  - STOP [DONE, UNTESTED]
+  - ESTOP [DONE, UNTESTED]
+  - NOTHING [DONE, UNTESTED]
 - Implement script execution
   - Implement script download
 - Implement sections from PScrInt (parts of code that are executed only with certain attributes)

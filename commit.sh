@@ -1,6 +1,6 @@
 #! /bin/sh
 
-# Script I use to commit and push
+# Script I use to commit and push, please ignore
 
 # Tidy up repo
 make fullcleanup

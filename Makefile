@@ -100,5 +100,5 @@ fullcleanup: cleanup buildcleanup libcleanup
 
 
 # phony targets
-.PHONY: cleanup buildcleanup fullcleanup all prepwork
+.PHONY: cleanup buildcleanup libcleanup fullcleanup all prepwork
 #
