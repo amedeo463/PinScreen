@@ -46,10 +46,10 @@ $(PREFIX)Linux-x86_64: COMPILER = x86_64-linux-gnu-g++ \
 					   EXT = 
 #
 # Windows
-$(PREFIX)Windows.exe: COMPILER = x86_64-w64-mingw32-g++-posix \
-                      OS_CLASS = WINDOWS \
-                      PLATFORM = Windows
-					  EXT = .exe
+$(PREFIX)Windows-x86_64.exe: COMPILER = x86_64-w64-mingw32-g++-posix \
+                             OS_CLASS = WINDOWS \
+                             PLATFORM = Windows
+					         EXT = .exe
 #
 
 # Common script for building all PC builds
@@ -65,6 +65,14 @@ $(PREFIX)%$(EXT): $(TEMP)/$(PLATFORM)/requests.a
 cleanup:
 	@echo Removing temp data
 	@rm -rf $(TEMP)/*
+#
+# Remove builds in build folder
+buildcleanup:
+	@echo Cleaning build folder
+	@rm -rf build/*
+#
+# do both
+fullcleanup: cleanup buildcleanup
 #
 
 # Link library
