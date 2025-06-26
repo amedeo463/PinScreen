@@ -16,7 +16,7 @@ all: prepwork $(BUILD_TARGETS)
 
 
 ## Building preparations ##
-prepwork: main.cpp ./libpinsc temp $(REQUESTS_C)
+prepwork: main.cpp ./libpinsc temp $(REQUESTS_C) ./builds/
 
 # Create temporary folder
 temp:
@@ -25,7 +25,6 @@ temp:
 #
 
 # Download and modify requests.c
-#TODO: automate the process of modifying source code to make it ad-hoc for the library
 $(REQUESTS_C):
 	@echo Downloading requests.c library
 	@git clone https://github.com/mactul/requests.c.git $(REQUESTS_C)
@@ -35,6 +34,10 @@ $(REQUESTS_C):
 
 	@sed -i 's/defined(_WIN32) || defined(WIN32)/defined(WINDOWS)/g' $(REQUESTS_C)/*.c
 #
+
+# Create builds folder
+./builds/:
+	@mkdir $(@D)
 ## ##
 
 
@@ -45,7 +48,8 @@ define BUILD_BIN
 # $(1): final part of the file
 # $(2): OS class 
 # $(3): OS with architecture
-# $(4): Compiler invoke
+# $(4): g++ Compiler invoke
+# $(5): gcc Compiler invoke
 
 # Build binary
 $(PREFIX)$(1): $(TEMP)/$(3)/requests.a
@@ -54,21 +58,21 @@ $(PREFIX)$(1): $(TEMP)/$(3)/requests.a
 #
 # Link library together
 $(TEMP)/$(3)/requests.a: $(TEMP)/$(3)/requests.o $(TEMP)/$(3)/utils.o $(TEMP)/$(3)/easy_tcp_tls.o $(TEMP)/$(3)/parser_tree.o
-	@mkdir $(@D)
-	@echo linking into $@
-	@ar cr $@ $^
+	@echo linking into $$@
+	@ar cr $$@ $$^
 #
 # Compile C files into objects
 $(TEMP)/$(3)/%.o: $(REQUESTS_C)/%.c
-	@echo Compiling $^ to $@
-	@$(4) -c $^ -o $@ -Wall -Wextra -pedantic -O3 -DNDEBUG -I $(REQUESTS_C)/
+	@mkdir -p $(TEMP)/$(3)/
+	@echo Compiling $$^ to $$@
+	@$(5) -c $$^ -o $$@ -Wall -Wextra -pedantic -O3 -DNDEBUG -D $(2) -I $(REQUESTS_C)/
 #
 endef
 #
 
 # Build macro calls for each build
-$(eval $(call BUILD_BIN,linux-x86_64,LINUX,linux-x86_64,x86_64-linux-gnu-g++))
-$(eval $(call BUILD_BIN,windows-x86_64.exe,WINDOWS,windows-x86_64,x86_64-linux-gnu-g++-win32))
+$(eval $(call BUILD_BIN,linux-x86_64,LINUX,linux-x86_64,x86_64-linux-gnu-g++,linux-x86_64,x86_64-linux-gnu-gcc))
+$(eval $(call BUILD_BIN,windows-x86_64.exe,WINDOWS,windows-x86_64,x86_64-w64-mingw32-g++-win32,x86_64-w64-mingw32-gcc-win32))
 #
 ## ##
 
@@ -81,10 +85,15 @@ cleanup:
 # Remove builds in build folder
 buildcleanup:
 	@echo Cleaning build folder
-	@rm -rf build/*
+	@rm -rf builds/*
 #
-# do both
-fullcleanup: cleanup buildcleanup
+# Remove requests.c repo
+libcleanup:
+	@echo Removing requests.c from libpinsc folder
+	@rm -rf $(REQUESTS_C)
+#
+# do all
+fullcleanup: cleanup buildcleanup libcleanup
 #
 
 ## ##

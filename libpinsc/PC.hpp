@@ -15,6 +15,6 @@ class p_misc {
         }
 
         int download(string URL, string saveas) {
-            req_get();
+            //req_get();
         }
 };
