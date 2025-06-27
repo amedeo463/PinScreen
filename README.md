@@ -5,8 +5,10 @@ The C++ successor of PScrInt, still a really big WIP.
 You are on your own on this one. To make a build, you must compile the given requests.c to a static library, then
 you must compile main.cpp with the library we just compiled.
 
-Building with make is not possible at the moment, I broke the makefile while trying to make the building process
+Building with make is possible only for linux on x86-64 at the moment, I broke the makefile while trying to make the building process
 more modular.
+
+You must run the makefile at the root of the repo twice (I'll fix that later) to build for linux on x86-64
 
 ## Goals to reach:
 - Add support for a REALLY amount of CPU architectures (even the shadier ones like MIPS, just for the sake of supporting a lot of devices)
@@ -35,9 +37,9 @@ more modular.
   - ATTRMSEL
   - ADDATTR
   - REMATTR
-  - STOP [DONE, UNTESTED]
-  - ESTOP [DONE, UNTESTED]
-  - NOTHING [DONE, UNTESTED]
+  - STOP [DONE]
+  - ESTOP [DONE]
+  - NOTHING [DONE]
 - Implement script execution
   - Implement script download
 - Implement sections from PScrInt (parts of code that are executed only with certain attributes)

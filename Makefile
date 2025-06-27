@@ -71,7 +71,7 @@ endef
 #
 
 # Build macro calls for each build
-$(eval $(call BUILD_BIN,linux-x86_64,LINUX,linux-x86_64,x86_64-linux-gnu-g++,linux-x86_64,x86_64-linux-gnu-gcc))
+$(eval $(call BUILD_BIN,linux-x86_64,LINUX,linux-x86_64,x86_64-linux-gnu-g++,x86_64-linux-gnu-gcc))
 $(eval $(call BUILD_BIN,windows-x86_64.exe,WINDOWS,windows-x86_64,x86_64-w64-mingw32-g++-win32,x86_64-w64-mingw32-gcc-win32))
 #
 ## ##
@@ -96,9 +96,18 @@ libcleanup:
 fullcleanup: cleanup buildcleanup libcleanup
 #
 
+# Clean build folder and rebuild
+rebuild: buildcleanup $(BUILD_TARGETS)
+	@echo rebuilt binaries succesfully
+#
+# Clean build folder and temp folder and rebuild from scratch
+fullrebuild: cleanup rebuild
+#
+# Reset repo to its original state and rebuild from scratch
+fullestrebuild: libcleanup fullrebuild
 ## ##
 
 
 # phony targets
-.PHONY: cleanup buildcleanup libcleanup fullcleanup all prepwork
+.PHONY: cleanup buildcleanup libcleanup fullcleanup all prepwork rebuild fullrebuild
 #

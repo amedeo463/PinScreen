@@ -103,8 +103,8 @@ class libps_class__ {
                 ;
             } else if (action == "stop") {
                 return -3; // script stopped (no error)
-            } else if {
-                cout << "ERROR: " << argstr << "\n"
+            } else if (action == "estop") {
+                cout << "ERROR: " << argstr << "\n";
                 return -4; // script stopped (an error occoured)
             } else {
                 return -1; // unknown instruction name

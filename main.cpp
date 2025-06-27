@@ -13,6 +13,8 @@ using namespace std;
 libps_class__ libps;
 
 int main() {
-    libps.exec("log hi, I'm working fine");
+    // I'm using the function below to test instructions
+    int returncode = libps.exec("stop FUCK YOU!");
+    cout << "Returned " << returncode << "\n";
     return 0;
 }
