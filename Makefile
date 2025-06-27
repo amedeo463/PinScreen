@@ -16,12 +16,12 @@ all: prepwork $(BUILD_TARGETS)
 
 
 ## Building preparations ##
-prepwork: main.cpp ./libpinsc temp $(REQUESTS_C) ./builds/
+prepwork: main.cpp ./libpinsc $(TEMP) $(REQUESTS_C) ./builds/
 
 # Create temporary folder
-temp:
+$(TEMP):
 	@echo Creating temp folder
-	@mkdir temp
+	@mkdir $(TEMP)
 #
 
 # Download and modify requests.c
@@ -32,7 +32,7 @@ $(REQUESTS_C):
 	@# Oh dear (remove the .git folder as it's useless)
 	@rm -rf $@/.git
 
-	@sed -i 's/defined(_WIN32) || defined(WIN32)/defined(WINDOWS)/g' $(REQUESTS_C)/*.c
+	@sed -i'' -e 's/defined(_WIN32) || defined(WIN32)/defined(WINDOWS)/g' $(REQUESTS_C)/*.c
 #
 
 # Create builds folder
@@ -97,7 +97,7 @@ fullcleanup: cleanup buildcleanup libcleanup
 #
 
 # Clean build folder and rebuild
-rebuild: buildcleanup $(BUILD_TARGETS)
+rebuild: buildcleanup all
 	@echo rebuilt binaries succesfully
 #
 # Clean build folder and temp folder and rebuild from scratch
@@ -105,9 +105,10 @@ fullrebuild: cleanup rebuild
 #
 # Reset repo to its original state and rebuild from scratch
 fullestrebuild: libcleanup fullrebuild
+#
 ## ##
 
 
 # phony targets
-.PHONY: cleanup buildcleanup libcleanup fullcleanup all prepwork rebuild fullrebuild
+.PHONY: cleanup buildcleanup libcleanup fullcleanup all prepwork rebuild fullrebuild fullestrebuild
 #
