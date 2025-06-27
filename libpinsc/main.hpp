@@ -39,6 +39,7 @@ w_misc ps_w_misc;
 // the library itself
 class libps_class__ {
     public:
+        //TODO: Add struct for errors (for better implementation of error handling)
         // Array to hold the arguments at the last call of parse()
         string ARGS[LIBPS_ARG_LIMIT];
 
