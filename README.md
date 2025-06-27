@@ -41,7 +41,7 @@ You must run the makefile at the root of the repo twice (I'll fix that later) to
   - ESTOP [DONE]
   - NOTHING [DONE]
 - Implement script execution
-  - Implement script download
+- Implement script download
 - Implement sections from PScrInt (parts of code that are executed only with certain attributes)
 - Implement attributes
 - Implement platform restriction for scripts (A script could specify for what platform it was made - If such is attempted to be run on another platform, PinScreen will refuse to execute it)
