@@ -1,0 +1,11 @@
+# Gitignore
+
+# Build folder and temp folder
+./builds
+./temp
+
+# VScode folder (useless to you)
+./.vscode
+
+# requests.c
+./libpinsc/requests.c
