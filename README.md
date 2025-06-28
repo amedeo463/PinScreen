@@ -2,13 +2,12 @@
 The C++ successor of PScrInt, still a really big WIP.
 
 ## Building
-You are on your own on this one. To make a build, you must compile the given requests.c to a static library, then
-you must compile main.cpp with the library we just compiled.
+Building with make is possible only for linux on x86-64 at the moment.
 
-Building with make is possible only for linux on x86-64 at the moment, I broke the makefile while trying to make the building process
-more modular.
+All you have to do is run `make` in the root of the repo.
 
-You must run the makefile at the root of the repo twice (I'll fix that later) to build for linux on x86-64
+Do not worry if it fails to find `openssl/ssl.h`, that means it tried to compile for Windows,
+although it should already have made a build for Linux on x86-64 at that point
 
 ## Goals to reach:
 - Add support for a REALLY amount of CPU architectures (even the shadier ones like MIPS, just for the sake of supporting a lot of devices)

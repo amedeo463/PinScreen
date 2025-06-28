@@ -62,6 +62,10 @@ $(TEMP)/$(3)/requests.a: $(TEMP)/$(3)/requests.o $(TEMP)/$(3)/utils.o $(TEMP)/$(
 	@ar cr $$@ $$^
 #
 # Compile C files into objects
+
+SOURCES = $(wildcard $(REQUESTS_C)/*.c)                             # AI made these two lines, and somehow made the makefile run
+OBJECTS = $(patsubst $(REQUESTS_C)/%.c,$(TEMP)/$(3)/%.o,$(SOURCES)) # I'm not going to touch them until I find out how they work
+
 $(TEMP)/$(3)/%.o: $(REQUESTS_C)/%.c
 	@mkdir -p $(TEMP)/$(3)/
 	@echo Compiling $$^ to $$@
@@ -72,7 +76,7 @@ endef
 
 # Build macro calls for each build
 $(eval $(call BUILD_BIN,linux-x86_64,LINUX,linux-x86_64,x86_64-linux-gnu-g++,x86_64-linux-gnu-gcc))
-$(eval $(call BUILD_BIN,windows-x86_64.exe,WINDOWS,windows-x86_64,x86_64-w64-mingw32-g++-win32,x86_64-w64-mingw32-gcc-win32))
+$(eval $(call BUILD_BIN,windows-x86_64.exe,WINDOWS,windows-x86_64,x86_64-w64-mingw32-g++-posix,x86_64-w64-mingw32-gcc-posix))
 #
 ## ##
 
