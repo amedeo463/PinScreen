@@ -7,15 +7,15 @@
 // ifdefs for all supported platforms.
 // Each points to a device-specific header file.
 // common.hpp, included by every platform-specific header file, already includes iostream. Don't panic.
-#if defined(WINDOWS)
-#include "PC.hpp"
-#elif defined(LINUX) || defined(BSD)
+#if defined(WINDOWS) || defined(LINUX) || defined(BSD)
 #include "PC.hpp"
 #elif defined(N3DS)
 #include "3DS.hpp"
 #else
 #include "PC.hpp" // compiles for PC by default
 #endif
+
+#include <fstream>
 
 _misc ps_misc;
 p_misc ps_p_misc;
@@ -84,13 +84,13 @@ class libps_class__ {
             transform(action.begin(), action.end(), action.begin(), ::tolower);
             
             // after obtaining all this info, we can finally interpret the line
-            if (action == "log") {
-                // show a simple message on screen
-                cout << "LOG: " << argstr << "\n";
-            } else if (action == "notice") {
+            if (action == "notice") {
                 // tell the user something and wait for it to hit the CONFIRM key
                 cout << "NOTICE: " << argstr << "\n";
                 ps_w_misc.waitForUser();
+            } else if (action == "log") {
+                // show a simple message on screen
+                cout << "LOG: " << argstr << "\n";
             } else if (action == "download") {
                 // download a file from the internet
                 if (ARGCOUNT >= 2) { // check if there are enough arguments
@@ -98,13 +98,19 @@ class libps_class__ {
                 } else {
                     return -2; // not enough arguments
                 }
-            } else if (action == "nothing") {
-                ;
+            } else if (action  == "copy") {
+                try {
+                    filesystem::copy(ARGS[1], ARGS[2]);
+                } catch (...) {
+                    return -5; // unable to copy file
+                }
             } else if (action == "stop") {
                 return -3; // script stopped (no error)
             } else if (action == "estop") {
                 cout << "ERROR: " << argstr << "\n";
                 return -4; // script stopped (an error occoured)
+            } else if (action == "nothing") {
+                ;
             } else {
                 return -1; // unknown instruction name
             }
