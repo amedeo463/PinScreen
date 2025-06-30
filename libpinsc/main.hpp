@@ -12,9 +12,7 @@
 #elif defined(LINUX) || defined(BSD)
 #include "PC.hpp"
 #elif defined(N3DS)
-#include "console.hpp" // still TODO
-#elif defined(WIIU)
-#include "console.hpp" // again, still TODO
+#include "3DS.hpp"
 #else
 #include "PC.hpp" // compiles for PC by default
 #endif
