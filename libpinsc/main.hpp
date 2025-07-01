@@ -98,7 +98,12 @@ class libps_class__ {
                 } else {
                     return ps_errs.NOT_ENOUGH_ARGUMENTS; // not enough arguments
                 }
-            } else if (action == "copy") {
+            } else if (action  == "copy") {
+                try {
+                    filesystem::copy(ARGS[1], ARGS[2]);
+                } catch (...) {
+                    return ps_errs.CANNOT_COPY; // unable to copy file
+                }
             } else if (action == "delete") {
             } else if (action == "newdir") {
             } else if (action == "copydir") {
@@ -110,12 +115,6 @@ class libps_class__ {
             } else if (action == "attrmsel") {
             } else if (action == "addattr") {
             } else if (action == "remattr") {
-            } else if (action  == "copy") {
-                try {
-                    filesystem::copy(ARGS[1], ARGS[2]);
-                } catch (...) {
-                    return ps_errs.CANNOT_COPY; // unable to copy file
-                }
             } else if (action == "stop") {
                 return ps_errs.SCRIPT_STOPPED; // script stopped (no error)
             } else if (action == "estop") {

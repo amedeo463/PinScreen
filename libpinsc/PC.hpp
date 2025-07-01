@@ -18,6 +18,6 @@ class p_misc {
             RequestsHandler *request = req_get(request, URL.c_str(), "");
             return 0;
 
-            //TODO: finish this
+            //TODO: fix and finish this function
         }
 };
