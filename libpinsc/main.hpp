@@ -9,13 +9,8 @@
 // common.hpp, included by every platform-specific header file, already includes iostream. Don't panic.
 #if defined(WINDOWS) || defined(LINUX) || defined(BSD)
 #include "PC.hpp"
-<<<<<<< HEAD
-#elif defined(N3DS) || defined(WIIU)
-#include "console.hpp" // still TODO
-=======
 #elif defined(N3DS)
 #include "3DS.hpp"
->>>>>>> c62bf538af430a3e49edce392098c3ab385657c0
 #else
 #include "PC.hpp" // compiles for PC by default
 #endif
@@ -101,9 +96,8 @@ class libps_class__ {
                 if (ARGCOUNT >= 2) { // check if there are enough arguments
                     ps_w_misc.download(ARGS[1], ARGS[2]);
                 } else {
-                    return -2; // not enough arguments
+                    return ps_errs.NOT_ENOUGH_ARGUMENTS; // not enough arguments
                 }
-<<<<<<< HEAD
             } else if (action == "copy") {
             } else if (action == "delete") {
             } else if (action == "newdir") {
@@ -116,23 +110,21 @@ class libps_class__ {
             } else if (action == "attrmsel") {
             } else if (action == "addattr") {
             } else if (action == "remattr") {
-=======
             } else if (action  == "copy") {
                 try {
                     filesystem::copy(ARGS[1], ARGS[2]);
                 } catch (...) {
-                    return -5; // unable to copy file
+                    return ps_errs.CANNOT_COPY; // unable to copy file
                 }
->>>>>>> c62bf538af430a3e49edce392098c3ab385657c0
             } else if (action == "stop") {
-                return -3; // script stopped (no error)
+                return ps_errs.SCRIPT_STOPPED; // script stopped (no error)
             } else if (action == "estop") {
                 cout << "ERROR: " << argstr << "\n";
-                return -4; // script stopped (an error occoured)
+                return ps_errs.SCRIPT_STOPPED_ERROR; // script stopped (an error occoured)
             } else if (action == "nothing") {
                 ;
             } else {
-                return -1; // unknown instruction name
+                return ps_errs.UNKNOWN_INSTRUCTION; // unknown instruction name
             }
 
             return 0;

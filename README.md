@@ -2,6 +2,9 @@
 The C++ successor of PScrInt, still a really big WIP.
 
 ## Building
+**Warning: I broke something in the p_misc::download() function, will fix later.
+Won't be able to build anything until I do.**
+
 Building with make is possible only for linux on x86-64 at the moment.
 
 All you have to do is run `make` in the root of the repo.

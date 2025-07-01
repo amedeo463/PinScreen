@@ -1,10 +1,20 @@
-// Header file containing common functions across ALL platforms.
+// Header file containing common functions for ALL platforms.
 
 #include <iostream>
 #include <string>
 #include <bits/stdc++.h>
 
 using namespace std;
+
+// error codes.
+struct ps_errs_ {
+    int UNKNOWN_INSTRUCTION = -1;
+    int NOT_ENOUGH_ARGUMENTS = -2;
+    int SCRIPT_STOPPED = -3;
+    int SCRIPT_STOPPED_ERROR = -4;
+    int CANNOT_COPY = -5;
+
+} ps_errs;
 
 // Argument limit for PinsaScript instructions.
 const int LIBPS_ARG_LIMIT = 128;
@@ -27,5 +37,4 @@ class _misc {
             /// 1.2 strip the thing and return
             return line.substr(cmdstart, cmdend-cmdstart);
         }
-        
 };

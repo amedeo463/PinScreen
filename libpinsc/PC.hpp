@@ -14,9 +14,10 @@ class p_misc {
             getline(cin, trashbin); // no one is remembering the input of this
         }
 
-        int download(const string URL, string saveas) {
-            const char *URL_[] = *URL;
-            RequestsHandler *request = req_get(request, URL_, "");
+        int download(string URL, string saveas) {
+            RequestsHandler *request = req_get(request, URL.c_str(), "");
             return 0;
+
+            //TODO: finish this
         }
 };
