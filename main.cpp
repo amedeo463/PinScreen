@@ -8,13 +8,28 @@
 
 // iostream was already included in common.hpp
 #include "libpinsc/main.hpp"
+#include "headers/loopmanage.hpp"
 
 using namespace std;
 libps_class__ libps;
 
 int main() {
-    // I'm using the function below to test instructions
-    int returncode = libps.exec("stop FUCK YOU!");
-    cout << "Returned " << returncode << "\n";
+    init();
+
+    while (loopCond()) {
+        beforeIter();
+
+        // I'm using the function below to test instructions
+        int returncode = libps.exec("stop FUCK YOU!");
+        cout << "Returned " << returncode << "\n";
+        DO_QUIT_ACTION = true;
+        
+        afterIter();
+        if (DO_QUIT_ACTION) {
+            break;
+        }
+    }
+
+    doExitAction();
     return 0;
 }

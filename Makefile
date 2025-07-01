@@ -10,13 +10,14 @@ BUILD_TARGETS = $(PREFIX)linux-x86_64 \
 #
 
 # Main
-all: prepwork $(BUILD_TARGETS)
+all: prepwork
 	@echo Nothing left to do, quitting
 #
 
 
 ## Building preparations ##
 prepwork: main.cpp ./libpinsc $(TEMP) $(REQUESTS_C) ./builds/
+	@$(MAKE) $(BUILD_TARGETS)
 
 # Create temporary folder
 $(TEMP):
@@ -101,14 +102,16 @@ fullcleanup: cleanup buildcleanup libcleanup
 #
 
 # Clean build folder and rebuild
-rebuild: buildcleanup all
+rebuild: buildcleanup
 	@echo rebuilt binaries succesfully
 #
 # Clean build folder and temp folder and rebuild from scratch
 fullrebuild: cleanup rebuild
+	@$(MAKE)
 #
 # Reset repo to its original state and rebuild from scratch
 fullestrebuild: libcleanup fullrebuild
+	@$(MAKE)
 #
 ## ##
 

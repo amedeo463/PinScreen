@@ -7,15 +7,20 @@
 // ifdefs for all supported platforms.
 // Each points to a device-specific header file.
 // common.hpp, included by every platform-specific header file, already includes iostream. Don't panic.
-#if defined(WINDOWS)
+#if defined(WINDOWS) || defined(LINUX) || defined(BSD)
 #include "PC.hpp"
-#elif defined(LINUX) || defined(BSD)
-#include "PC.hpp"
+<<<<<<< HEAD
 #elif defined(N3DS) || defined(WIIU)
 #include "console.hpp" // still TODO
+=======
+#elif defined(N3DS)
+#include "3DS.hpp"
+>>>>>>> c62bf538af430a3e49edce392098c3ab385657c0
 #else
 #include "PC.hpp" // compiles for PC by default
 #endif
+
+#include <fstream>
 
 _misc ps_misc;
 p_misc ps_p_misc;
@@ -98,6 +103,7 @@ class libps_class__ {
                 } else {
                     return -2; // not enough arguments
                 }
+<<<<<<< HEAD
             } else if (action == "copy") {
             } else if (action == "delete") {
             } else if (action == "newdir") {
@@ -110,6 +116,14 @@ class libps_class__ {
             } else if (action == "attrmsel") {
             } else if (action == "addattr") {
             } else if (action == "remattr") {
+=======
+            } else if (action  == "copy") {
+                try {
+                    filesystem::copy(ARGS[1], ARGS[2]);
+                } catch (...) {
+                    return -5; // unable to copy file
+                }
+>>>>>>> c62bf538af430a3e49edce392098c3ab385657c0
             } else if (action == "stop") {
                 return -3; // script stopped (no error)
             } else if (action == "estop") {
