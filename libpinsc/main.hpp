@@ -11,10 +11,8 @@
 #include "PC.hpp"
 #elif defined(LINUX) || defined(BSD)
 #include "PC.hpp"
-#elif defined(N3DS)
+#elif defined(N3DS) || defined(WIIU)
 #include "console.hpp" // still TODO
-#elif defined(WIIU)
-#include "console.hpp" // again, still TODO
 #else
 #include "PC.hpp" // compiles for PC by default
 #endif
@@ -86,13 +84,13 @@ class libps_class__ {
             transform(action.begin(), action.end(), action.begin(), ::tolower);
             
             // after obtaining all this info, we can finally interpret the line
-            if (action == "log") {
-                // show a simple message on screen
-                cout << "LOG: " << argstr << "\n";
-            } else if (action == "notice") {
+            if (action == "notice") {
                 // tell the user something and wait for it to hit the CONFIRM key
                 cout << "NOTICE: " << argstr << "\n";
                 ps_w_misc.waitForUser();
+            } else if (action == "log") {
+                // show a simple message on screen
+                cout << "LOG: " << argstr << "\n";
             } else if (action == "download") {
                 // download a file from the internet
                 if (ARGCOUNT >= 2) { // check if there are enough arguments
@@ -100,13 +98,25 @@ class libps_class__ {
                 } else {
                     return -2; // not enough arguments
                 }
-            } else if (action == "nothing") {
-                ;
+            } else if (action == "copy") {
+            } else if (action == "delete") {
+            } else if (action == "newdir") {
+            } else if (action == "copydir") {
+            } else if (action == "deldir") {
+            } else if (action == "rdeldir") {
+            } else if (action == "extract") {
+            } else if (action == "attryn") {
+            } else if (action == "attrsel") {
+            } else if (action == "attrmsel") {
+            } else if (action == "addattr") {
+            } else if (action == "remattr") {
             } else if (action == "stop") {
                 return -3; // script stopped (no error)
             } else if (action == "estop") {
                 cout << "ERROR: " << argstr << "\n";
                 return -4; // script stopped (an error occoured)
+            } else if (action == "nothing") {
+                ;
             } else {
                 return -1; // unknown instruction name
             }

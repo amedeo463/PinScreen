@@ -19,7 +19,7 @@ although it should already have made a build for Linux on x86-64 at that point
 - Use libpinsc to make a PinsaScript compiler (could call it PinComp or something)
 
 ## TODO:
-- Fix the makefile
+- Fix the makefile [Almost done]
 - Implement all commands I previously implemented on PScrInt
   - NOTICE [DONE]
   - LOG [DONE]
@@ -41,6 +41,8 @@ although it should already have made a build for Linux on x86-64 at that point
   - NOTHING [DONE]
 - Implement script execution
 - Implement script download
+  - Fix openssl/ssl.h with windows issue
+    - implement openssl compilation from makefile
 - Implement sections from PScrInt (parts of code that are executed only with certain attributes)
 - Implement attributes
 - Implement platform restriction for scripts (A script could specify for what platform it was made - If such is attempted to be run on another platform, PinScreen will refuse to execute it)
