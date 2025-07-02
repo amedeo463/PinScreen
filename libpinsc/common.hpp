@@ -13,7 +13,9 @@ struct ps_errs_ {
     int SCRIPT_STOPPED = -3;
     int SCRIPT_STOPPED_ERROR = -4;
     int CANNOT_COPY = -5;
-
+    int ACCESS_DENIED = -6;
+    int FILE_EXISTS = -7;
+    int DIRECTORY_NOT_EMPTY = -8;
 } ps_errs;
 
 // Argument limit for PinsaScript instructions.
