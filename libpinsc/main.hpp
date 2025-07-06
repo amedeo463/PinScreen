@@ -99,10 +99,13 @@ class libps_class__ {
                     return ps_errs.NOT_ENOUGH_ARGUMENTS; // not enough arguments
                 }
             } else if (action  == "copy") {
-                try {
-                    filesystem::copy(ARGS[1], ARGS[2]);
-                } catch (...) {
-                    return ps_errs.CANNOT_COPY; // unable to copy file
+                //TODO: test this
+                if (filesystem::is_directory(ARGS[1])) {
+                    try {
+                        filesystem::copy(ARGS[1], ARGS[2]);
+                    } catch (...) {
+                        return ps_errs.CANNOT_COPY; // unable to copy file
+                    }
                 }
             } else if (action == "delete") {
             } else if (action == "newdir") {

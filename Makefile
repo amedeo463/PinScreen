@@ -1,7 +1,7 @@
 # This makefile will compile binaries for all currently supported platforms #
 
 PREFIX = builds/PinScreen-
-REQUESTS_C = ./libpinsc/requests.c
+REQUESTS_C = ./libpinsc/cpr
 TEMP = ./temp
 
 # All things that need to be built
@@ -16,7 +16,7 @@ all: prepwork
 
 
 ## Building preparations ##
-prepwork: main.cpp ./libpinsc $(TEMP) $(REQUESTS_C) ./builds/
+prepwork: main.cpp ./libpinsc $(TEMP) ./builds/
 	@$(MAKE) $(BUILD_TARGETS)
 
 # Create temporary folder
@@ -25,15 +25,15 @@ $(TEMP):
 	@mkdir $(TEMP)
 #
 
-# Download and modify requests.c
-$(REQUESTS_C):
-	@echo Downloading requests.c library
-	@git clone https://github.com/mactul/requests.c.git $(REQUESTS_C)
-	
-	@# Oh dear (remove the .git folder as it's useless)
-	@rm -rf $@/.git
-
-	@sed -i'' -e 's/defined(_WIN32) || defined(WIN32)/defined(WINDOWS)/g' $(REQUESTS_C)/*.c
+# Download and modify requests.c (NOT USED ANYMORE)
+#$(REQUESTS_C):
+#	@echo Downloading requests.c library
+#	@git clone https://github.com/mactul/requests.c.git $(REQUESTS_C)
+#	
+#	@# Oh dear (remove the .git folder as it's useless)
+#	@rm -rf $@/.git
+#
+#	@sed -i'' -e 's/defined(_WIN32) || defined(WIN32)/defined(WINDOWS)/g' $(REQUESTS_C)/*.c
 #
 
 # Create builds folder
@@ -53,25 +53,28 @@ define BUILD_BIN
 # $(5): gcc Compiler invoke
 
 # Build binary
-$(PREFIX)$(1): $(TEMP)/$(3)/requests.a
+$(PREFIX)$(1):
 	@echo building for platform $(3)
-	@$(4) main.cpp $$^ -o $$@ -D $(2) -static
+	@$(4) main.cpp -o $$@ -D $(2) -static -lcurl
 #
-# Link library together
-$(TEMP)/$(3)/requests.a: $(TEMP)/$(3)/requests.o $(TEMP)/$(3)/utils.o $(TEMP)/$(3)/easy_tcp_tls.o $(TEMP)/$(3)/parser_tree.o
-	@echo linking into $$@
-	@ar cr $$@ $$^
-#
-# Compile C files into objects
 
-SOURCES = $(wildcard $(REQUESTS_C)/*.c)                             # AI made these two lines, and somehow made the makefile run
-OBJECTS = $(patsubst $(REQUESTS_C)/%.c,$(TEMP)/$(3)/%.o,$(SOURCES)) # I'm not going to touch them until I find out how they work
-
-$(TEMP)/$(3)/%.o: $(REQUESTS_C)/%.c
-	@mkdir -p $(TEMP)/$(3)/
-	@echo Compiling $$^ to $$@
-	@$(5) -c $$^ -o $$@ -Wall -Wextra -pedantic -O3 -DNDEBUG -D $(2) -I $(REQUESTS_C)/
+# NOT USED ANYMORE #
+## Link library together
+#$(TEMP)/$(3)/requests.a: $(TEMP)/$(3)/requests.o $(TEMP)/$(3)/utils.o $(TEMP)/$(3)/easy_tcp_tls.o $(TEMP)/$(3)/parser_tree.o
+#	@echo linking into $$@
+#	@ar cr $$@ $$^
+##
+## Compile C files into objects
 #
+#SOURCES = $(wildcard $(REQUESTS_C)/*.c)                             # AI made these two lines, and somehow made the makefile run
+#OBJECTS = $(patsubst $(REQUESTS_C)/%.c,$(TEMP)/$(3)/%.o,$(SOURCES)) # I'm not going to touch them until I find out how they work
+#
+#$(TEMP)/$(3)/%.o: $(REQUESTS_C)/%.c
+#	@mkdir -p $(TEMP)/$(3)/
+#	@echo Compiling $$^ to $$@
+#	@$(5) -c $$^ -o $$@ -Wall -Wextra -pedantic -O3 -DNDEBUG -D $(2) -I $(REQUESTS_C)/
+##
+# #
 endef
 #
 

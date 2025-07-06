@@ -26,7 +26,7 @@ although it should already have made a build for Linux on x86-64 at that point
   - NOTICE [DONE]
   - LOG [DONE]
   - DOWNLOAD [WIP]
-  - COPY [WIP]
+  - COPY [done, Untested]
   - DELETE
   - NEWDIR
   - COPYDIR
