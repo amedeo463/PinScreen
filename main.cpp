@@ -20,7 +20,7 @@ int main() {
         beforeIter();
 
         // I'm using the function below to test instructions
-        int returncode = libps.exec("stop FUCK YOU!");
+        int returncode = libps.exec("download google.com ../haha.html");
         cout << "Returned " << returncode << "\n";
         DO_QUIT_ACTION = true;
         

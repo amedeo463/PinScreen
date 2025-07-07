@@ -19,9 +19,8 @@ class p_misc {
             // stolen and modified from: https://gist.github.com/alghanmi/c5d7b761b2c9ab199157
             CURL *curl;
             CURLcode res;
-            FILE *fsaves = fopen(saveas.c_str(), "a");
+            FILE *fsaves = fopen(saveas.c_str(), "w");
             // TODO: check documentation for fopen() modes
-
             curl = curl_easy_init();
             if (curl) {
                 curl_easy_setopt(curl, CURLOPT_URL, URL.c_str());

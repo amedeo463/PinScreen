@@ -50,12 +50,12 @@ define BUILD_BIN
 # $(2): OS class 
 # $(3): OS with architecture
 # $(4): g++ Compiler invoke
-# $(5): additional include path
+# $(5): additional flags
 
 # Build binary
 $(PREFIX)$(1):
 	@echo building for platform $(3)
-	@$(4) main.cpp -o $$@ -D $(2) -static -lcurl -I$(5)
+	@$(4) main.cpp -o $$@ -D $(2) -lcurl $(5)
 #
 endef
 # NOT USED ANYMORE #
@@ -77,7 +77,7 @@ endef
 # #
 
 # Build macro calls for each build
-$(eval $(call BUILD_BIN,linux-x86_64,LINUX,linux-x86_64,x86_64-linux-gnu-g++,/usr/include/x86_64-linux-gnu))
+$(eval $(call BUILD_BIN,linux-x86_64,LINUX,linux-x86_64,x86_64-linux-gnu-g++,$(curl-config --static-libs) -I/usr/include/x86_64-linux-gnu))
 $(eval $(call BUILD_BIN,windows-x86_64.exe,WINDOWS,windows-x86_64,x86_64-w64-mingw32-g++-posix,))
 #
 ## ##
