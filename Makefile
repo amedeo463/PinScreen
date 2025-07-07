@@ -50,14 +50,14 @@ define BUILD_BIN
 # $(2): OS class 
 # $(3): OS with architecture
 # $(4): g++ Compiler invoke
-# $(5): gcc Compiler invoke
+# $(5): additional include path
 
 # Build binary
 $(PREFIX)$(1):
 	@echo building for platform $(3)
-	@$(4) main.cpp -o $$@ -D $(2) -static -lcurl
+	@$(4) main.cpp -o $$@ -D $(2) -static -lcurl -I$(5)
 #
-
+endef
 # NOT USED ANYMORE #
 ## Link library together
 #$(TEMP)/$(3)/requests.a: $(TEMP)/$(3)/requests.o $(TEMP)/$(3)/utils.o $(TEMP)/$(3)/easy_tcp_tls.o $(TEMP)/$(3)/parser_tree.o
@@ -75,12 +75,10 @@ $(PREFIX)$(1):
 #	@$(5) -c $$^ -o $$@ -Wall -Wextra -pedantic -O3 -DNDEBUG -D $(2) -I $(REQUESTS_C)/
 ##
 # #
-endef
-#
 
 # Build macro calls for each build
-$(eval $(call BUILD_BIN,linux-x86_64,LINUX,linux-x86_64,x86_64-linux-gnu-g++,x86_64-linux-gnu-gcc))
-$(eval $(call BUILD_BIN,windows-x86_64.exe,WINDOWS,windows-x86_64,x86_64-w64-mingw32-g++-posix,x86_64-w64-mingw32-gcc-posix))
+$(eval $(call BUILD_BIN,linux-x86_64,LINUX,linux-x86_64,x86_64-linux-gnu-g++,/usr/include/x86_64-linux-gnu))
+$(eval $(call BUILD_BIN,windows-x86_64.exe,WINDOWS,windows-x86_64,x86_64-w64-mingw32-g++-posix,))
 #
 ## ##
 
@@ -105,7 +103,7 @@ fullcleanup: cleanup buildcleanup libcleanup
 #
 
 # Clean build folder and rebuild
-rebuild: buildcleanup
+rebuild: buildcleanup all
 	@echo rebuilt binaries succesfully
 #
 # Clean build folder and temp folder and rebuild from scratch

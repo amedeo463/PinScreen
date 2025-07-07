@@ -29,7 +29,7 @@ class w_misc {
         }
         void download(string URL, string saveas) {
             cout << "DOWNLOAD: " << saveas << " (" << URL << ")\n";
-            ps_p_misc.download(URL, saveas);
+            //ps_p_misc.download(URL, saveas);
         }
 };
 w_misc ps_w_misc;
