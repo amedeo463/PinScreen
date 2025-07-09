@@ -5,11 +5,12 @@ The C++ successor of PScrInt, still a really big WIP.
 ### Building requirements
 - a GNU/Linux system (I think you can use MSYS2 on Windows, but I'm not going to test that) with the following packages and the corresponding dependencies:
   - curl
+  - libcurl4-openssl-dev
   - g++-x86-64-linux-gnu
   - g++-mingw-w64-x86-64-posix
 
 Why these g++ cross-compilers in particular?
-Well... The list is going to grow a lot more.
+Well... The list is going to grow a lot more in the future.
 
 ### Actually building the thing
 **Warning: I broke something in the p_misc::download() function, will fix later.
