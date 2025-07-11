@@ -20,19 +20,25 @@ class p_misc {
             CURL *curl;
             CURLcode res;
             FILE *fsaves = fopen(saveas.c_str(), "w");
-            // TODO: check documentation for fopen() modes
+            curl_global_init(CURL_GLOBAL_ALL);
             curl = curl_easy_init();
             if (curl) {
                 curl_easy_setopt(curl, CURLOPT_URL, URL.c_str());
                 curl_easy_setopt(curl, CURLOPT_WRITEDATA, &fsaves);
+                curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, dataWrite);
 
                 res = curl_easy_perform(curl);
                 curl_easy_cleanup(curl);
             }
 
+            //fclose(fsaves); //if you uncomment this simple line, the program segfaults
             return 0;
             //TODO: fix and finish this function
         }
 
     private:
+        static size_t dataWrite(void *ptr, size_t size, size_t nmemb, void *stream) {
+            size_t written = fwrite(ptr, size, nmemb, (FILE *)stream);
+            return written;
+        }
 };
