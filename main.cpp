@@ -1,6 +1,6 @@
 /////////////// 
 //  ___ ___  // PinScreen
-// |   |  _| // a PinsaScript interpreter
+// | _ |  _| // a PinsaScript interpreter
 // |  _|_  | // Ver. 1.0
 // |_| |___| // Written by amedeo463 
 //           // Protected under CC BY-SA 4.0 International
@@ -13,6 +13,8 @@
 using namespace std;
 libps_class__ libps;
 
+
+// the structure looks like this because of future console support
 int main() {
     init();
 
