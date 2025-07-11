@@ -1,4 +1,4 @@
-// Header file containing common functions for ALL platforms.
+// Header file containing common functions and constants for ALL platforms.
 
 #include <iostream>
 #include <string>
@@ -24,14 +24,17 @@ struct ps_errs_ {
     int NOT_A_FILE           = -14;
     int NOT_A_DIRECTORY      = -15;
     int IS_DIRECTORY         = -16;
+    int ATTR_LIMIT_REACHED   = -17;
+    int ATTR_NOT_FOUND       = -18;
 
     int GENERIC_ERROR = -1000000;
 } ps_errs;
 
 // Argument limit for PinsaScript instructions.
 const int LIBPS_ARG_LIMIT = 128;
-// Maximum download size, in bits
-const int LIBPS_DOWNLOAD_SIZE_LIMIT = 268435456;
+
+// Maximum attributes for scripts.
+const int LIBPS_ATTR_LIMIT = 256;
 
 class _misc {
     public:

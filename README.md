@@ -46,8 +46,8 @@ although it should already have made a build for Linux on x86-64 at that point
   - ATTRYN
   - ATTRSEL
   - ATTRMSEL
-  - ADDATTR
-  - REMATTR
+  - ADDATTR [done, untested]
+  - REMATTR [done, untested]
   - STOP [DONE]
   - ESTOP [DONE]
   - NOTHING [DONE]
@@ -56,7 +56,7 @@ although it should already have made a build for Linux on x86-64 at that point
 - Fix openssl/ssl.h with windows issue
   - implement openssl compilation from makefile
 - Implement sections from PScrInt (parts of code that are executed only with certain attributes)
-  - Implement attributes
+  - Implement attributes [DONE]
 - Implement platform restriction for scripts (A script could specify for what platform it was made - If such is attempted to be run on another platform, PinScreen will refuse to execute it)
 
 

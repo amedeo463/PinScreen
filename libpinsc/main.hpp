@@ -38,10 +38,16 @@ w_misc ps_w_misc;
 class libps_class__ {
     public:
         // Array to hold the arguments at the last call of parse()
-        //TODO: add struct or something else to better implement error handling
         string ARGS[LIBPS_ARG_LIMIT];
 
+        // Argument count at the last call of parse() (Number of items in ARGS[])
         int ARGCOUNT = 0;
+
+        // Array containing attributes
+        string ATTRLIST[LIBPS_ATTR_LIMIT];
+
+        // Number of currently active attributes.
+        int ATTRCOUNT = 0;
 
         // Parse a line of code
         int parse(string line) {
@@ -61,7 +67,9 @@ class libps_class__ {
                     last_end = i+1;
                 }
             }
+            // Specifically for the last argument (where there's no space and there's only the end of the string)
             ARGS[ARGCOUNT] = s_line.substr(last_end, last_end-s_line.length()-1);
+            ARGCOUNT++;
 
             return 0;
         }
@@ -83,6 +91,9 @@ class libps_class__ {
             string action = ARGS[0];
             transform(action.begin(), action.end(), action.begin(), ::tolower);
             
+            // this one is used for return codes, (it's rt as in ReTurn)
+            int rt;
+
             // after obtaining all this info, we can finally interpret the line
             if (action == "notice") {
                 // tell the user something and wait for it to hit the CONFIRM key
@@ -100,7 +111,7 @@ class libps_class__ {
                 }
             } else if (action  == "copy") {
                 //TODO: test this
-                if (ARGCOUNT == 2) {
+                if (ARGCOUNT == 3) {
                     if (!filesystem::is_directory(ARGS[1]) ) {
                         if (filesystem::is_directory(ARGS[2])) {
                             try {
@@ -129,7 +140,27 @@ class libps_class__ {
             } else if (action == "attrsel") {
             } else if (action == "attrmsel") {
             } else if (action == "addattr") {
+                if (ARGCOUNT > 2) {
+                    for (int i = 1; i < ARGCOUNT; i++) {
+                        rt = add_attr(ARGS[i]);
+                        if (rt != 0) {
+                            return rt;
+                        }
+                    }
+                } else {
+                    return ps_errs.NOT_ENOUGH_ARGUMENTS;
+                }
             } else if (action == "remattr") {
+                if (ARGCOUNT > 2) {
+                    for (int i = 1; i < ARGCOUNT; i++) {
+                        rt = del_attr(ARGS[i]);
+                        if (rt != 0) {
+                            return rt;
+                        }
+                    }
+                } else {
+                    return ps_errs.NOT_ENOUGH_ARGUMENTS;
+                }
             } else if (action == "stop") {
                 return ps_errs.SCRIPT_STOPPED; // script stopped (no error)
             } else if (action == "estop") {
@@ -143,4 +174,47 @@ class libps_class__ {
 
             return 0;
         }
+
+        // Adds an attribute to the attribute list. No effect if the attribute existed already.
+        int add_attr(string attr) {
+            if (ATTRCOUNT < LIBPS_ATTR_LIMIT) {
+                int putattrin = -1;
+                bool existed = false;
+                for (int i = 0; i < LIBPS_ATTR_LIMIT; i++) {
+                    if (ATTRLIST[i] == "") {
+                        putattrin = i; // hold on, we don't know if the attr already exists somewhere else
+                    }
+
+                    if (ATTRLIST[i] == attr) {
+                        existed = true;
+                        break;
+                    }
+                }
+
+                if (putattrin != -1) {
+                    ATTRLIST[putattrin] = attr;
+                } else if (existed) {
+                    ;
+                } else {
+                    // No idea how you could end up here but here's a handler anyway
+                    return ps_errs.GENERIC_ERROR;
+                }
+            } else {
+                return ps_errs.ATTR_LIMIT_REACHED;
+            }
+
+            return 0;
+        }
+
+        int del_attr(string attr) {
+            for (int i = 0; i < LIBPS_ATTR_LIMIT; i++) {
+                if (ATTRLIST[i] == attr) {
+                    ATTRLIST[i] == "";
+                    return 0;
+                }
+            }
+
+            return ps_errs.ATTR_NOT_FOUND;
+        }
+    
 };
