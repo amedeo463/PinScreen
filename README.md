@@ -32,7 +32,7 @@ although it should already have made a build for Linux on x86-64 at that point
 - Use libpinsc to make a PinsaScript compiler (could call it PinComp or something)
 
 ## TODO:
-- Implement all commands I previously implemented on PScrInt
+- Implement all instructions I previously implemented on PScrInt
   - NOTICE [DONE]
   - LOG [DONE]
   - DOWNLOAD [DONE]
