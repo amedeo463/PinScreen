@@ -100,15 +100,19 @@ class libps_class__ {
                 }
             } else if (action  == "copy") {
                 //TODO: test this
-                if (ARGCOUNT == 3) {
-                    if (!filesystem::is_directory(ARGS[1]) && filesystem::is_directory(ARGS[2])) {
-                        try {
-                            filesystem::copy(ARGS[1], ARGS[2]);
-                        } catch (...) {
-                            return ps_errs.CANNOT_COPY; // unable to copy file
+                if (ARGCOUNT == 2) {
+                    if (!filesystem::is_directory(ARGS[1]) ) {
+                        if (filesystem::is_directory(ARGS[2])) {
+                            try {
+                                filesystem::copy(ARGS[1], ARGS[2]);
+                            } catch (...) {
+                                return ps_errs.CANNOT_COPY; // unable to copy file
+                            }
+                        } else {
+                            return ps_errs.NOT_A_DIRECTORY; // not a directory
                         }
                     } else {
-                        return ps_errs.;
+                        return ps_errs.IS_DIRECTORY; // is a directory (please anything but a directory)
                     }
                 } else if (ARGCOUNT < 3) {
                     return ps_errs.NOT_ENOUGH_ARGUMENTS;

@@ -21,6 +21,9 @@ struct ps_errs_ {
     int DOWNLOAD_FAIL        = -11;
     int DOWNLOAD_SAVE_FAIL   = -12;
     int TOO_MANY_ARGUMENTS   = -13;
+    int NOT_A_FILE           = -14;
+    int NOT_A_DIRECTORY      = -15;
+    int IS_DIRECTORY         = -16;
 
     int GENERIC_ERROR = -1000000;
 } ps_errs;
