@@ -59,4 +59,5 @@ although it should already have made a build for Linux on x86-64 at that point
   - Implement attributes
 - Implement platform restriction for scripts (A script could specify for what platform it was made - If such is attempted to be run on another platform, PinScreen will refuse to execute it)
 
+
 - Fix the makefile [DONE]

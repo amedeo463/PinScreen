@@ -20,6 +20,7 @@ struct ps_errs_ {
     int DIRECTORY_NOT_FOUND  = -10;
     int DOWNLOAD_FAIL        = -11;
     int DOWNLOAD_SAVE_FAIL   = -12;
+    int TOO_MANY_ARGUMENTS   = -13;
 
     int GENERIC_ERROR = -1000000;
 } ps_errs;

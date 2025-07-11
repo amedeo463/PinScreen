@@ -100,12 +100,20 @@ class libps_class__ {
                 }
             } else if (action  == "copy") {
                 //TODO: test this
-                if (filesystem::is_directory(ARGS[1])) {
-                    try {
-                        filesystem::copy(ARGS[1], ARGS[2]);
-                    } catch (...) {
-                        return ps_errs.CANNOT_COPY; // unable to copy file
+                if (ARGCOUNT == 3) {
+                    if (!filesystem::is_directory(ARGS[1]) && filesystem::is_directory(ARGS[2])) {
+                        try {
+                            filesystem::copy(ARGS[1], ARGS[2]);
+                        } catch (...) {
+                            return ps_errs.CANNOT_COPY; // unable to copy file
+                        }
+                    } else {
+                        return ps_errs.;
                     }
+                } else if (ARGCOUNT < 3) {
+                    return ps_errs.NOT_ENOUGH_ARGUMENTS;
+                } else if (ARGCOUNT > 3) {
+                    return ps_errs.TOO_MANY_ARGUMENTS;
                 }
             } else if (action == "delete") {
             } else if (action == "newdir") {
