@@ -8,15 +8,14 @@ The C++ successor of PScrInt, still a really big WIP.
   - libcurl4-openssl-dev
   - g++-x86-64-linux-gnu
   - g++-mingw-w64-x86-64-posix
+  - make
 
 Why these g++ cross-compilers in particular?
 Well... The list is going to grow a lot more in the future.
 
 ### Actually building the thing
-**Warning: I broke something in the p_misc::download() function, will fix later.
-Won't be able to build anything until I do.**
 
-Building with make is possible only for linux on x86-64 at the moment.
+Building is possible only for GNU/Linux on x86-64 at the moment.
 
 All you have to do is run `make` in the root of the repo.
 
@@ -36,7 +35,7 @@ although it should already have made a build for Linux on x86-64 at that point
 - Implement all commands I previously implemented on PScrInt
   - NOTICE [DONE]
   - LOG [DONE]
-  - DOWNLOAD [WIP]
+  - DOWNLOAD [DONE]
   - COPY [done, Untested]
   - DELETE
   - NEWDIR
