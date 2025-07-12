@@ -1,8 +1,9 @@
 # This makefile will compile binaries for all currently supported platforms #
 
 PREFIX = builds/PinScreen-
-REQUESTS_C = ./libpinsc/cpr
+#REQUESTS_C = ./libpinsc/cpr
 TEMP = ./temp
+MAIN_CPP = ./main.cpp
 
 # All things that need to be built
 BUILD_TARGETS = $(PREFIX)linux-x86_64 \
@@ -16,7 +17,7 @@ all: prepwork
 
 
 ## Building preparations ##
-prepwork: main.cpp ./libpinsc $(TEMP) ./builds/
+prepwork: $(MAIN_CPP) ./libpinsc $(TEMP) ./builds/
 	@$(MAKE) $(BUILD_TARGETS)
 
 # Create temporary folder
@@ -55,7 +56,7 @@ define BUILD_BIN
 # Build binary
 $(PREFIX)$(1):
 	@echo building for platform $(3)
-	@$(4) main.cpp -o $$@ -D $(2) -lcurl $(5)
+	@$(4) $(MAIN_CPP) -o $$@ -D $(2) -lcurl $(5)
 #
 endef
 # NOT USED ANYMORE #
@@ -93,13 +94,8 @@ buildcleanup:
 	@echo Cleaning build folder
 	@rm -rf builds/*
 #
-# Remove requests.c repo
-libcleanup:
-	@echo Removing requests.c from libpinsc folder
-	@rm -rf $(REQUESTS_C)
-#
 # do all
-fullcleanup: cleanup buildcleanup libcleanup
+fullcleanup: cleanup buildcleanup
 #
 
 # Clean build folder and rebuild
@@ -111,12 +107,15 @@ fullrebuild: cleanup rebuild
 	@$(MAKE)
 #
 # Reset repo to its original state and rebuild from scratch
-fullestrebuild: libcleanup fullrebuild
-	@$(MAKE)
+#fullestrebuild: libcleanup fullrebuild
+#	@$(MAKE)
 #
+
+debug:
+	@g++ debug.cpp -lcurl -o ./temp/ps-debug -I/usr/include/x86_64-linux-gnu
 ## ##
 
 
 # phony targets
-.PHONY: cleanup buildcleanup libcleanup fullcleanup all prepwork rebuild fullrebuild fullestrebuild
+.PHONY: cleanup buildcleanup libcleanup fullcleanup all prepwork rebuild fullrebuild fullestrebuild debug
 #

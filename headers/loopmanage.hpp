@@ -7,7 +7,7 @@ bool DO_QUIT_ACTION = false;
 #elif defined(N3DS)
 #include <3ds.h>
 #elif defined(WIIU)
-
+#include <wiiu.h>
 #else
 #define DEFAULT_PLATFORM
 #endif

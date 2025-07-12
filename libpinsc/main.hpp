@@ -43,6 +43,12 @@ class libps_class__ {
         // Argument count at the last call of parse() (Number of items in ARGS[])
         int ARGCOUNT = 0;
 
+        // ARGS[0] in lowercase
+        string action;
+
+        // Non-parsed text after ARGS[0].
+        string argstr;
+
         // Array containing attributes
         string ATTRLIST[LIBPS_ATTR_LIMIT];
 
@@ -58,7 +64,7 @@ class libps_class__ {
             for (int i = 0; i < s_line.length(); i++) {
                 if (s_line[i] == ' ') {
                     if (ARGCOUNT < LIBPS_ARG_LIMIT) {
-                        if (i-last_end > 1) {
+                        if (i-last_end >= 1) {
                             ARGS[ARGCOUNT] = s_line.substr(last_end, i-last_end);
                             ARGCOUNT++;
                         }
@@ -71,25 +77,24 @@ class libps_class__ {
             ARGS[ARGCOUNT] = s_line.substr(last_end, last_end-s_line.length()-1);
             ARGCOUNT++;
 
+            // get the instruction name, then make it lowercase for easier usage
+            action = ARGS[0];
+            transform(action.begin(), action.end(), action.begin(), ::tolower);
+
+            // find the args (but as a string), mainly used for logging
+            int temp0 = s_line.find_first_of(' ');
+            argstr = "";
+            if (temp0 < s_line.length()) {
+                argstr = s_line.substr(temp0+1, s_line.length()-1);
+            }
+
             return 0;
         }
 
         // Execute a single PinsaScript instruction
         int exec(string line) {
-            // strip and parse instruction
-            string line_s = ps_misc.strip(line);
-            parse(line_s);
-
-            // find the args (but as a string), mainly used for logging
-            int temp0 = line_s.find_first_of(' ');
-            string argstr = "";
-            if (temp0 < line_s.length()) {
-                argstr = line_s.substr(temp0+1, line_s.length()-1);
-            }
-
-            // get the instruction name, then make it lowercase for easier usage
-            string action = ARGS[0];
-            transform(action.begin(), action.end(), action.begin(), ::tolower);
+            // parse instruction
+            parse(line);
             
             // this one is used for return codes, (it's rt as in ReTurn)
             int rt;
@@ -140,9 +145,10 @@ class libps_class__ {
             } else if (action == "attrsel") {
             } else if (action == "attrmsel") {
             } else if (action == "addattr") {
-                if (ARGCOUNT > 2) {
+                if (ARGCOUNT > 1) {
                     for (int i = 1; i < ARGCOUNT; i++) {
                         rt = add_attr(ARGS[i]);
+                        cout << ARGS[i] << "\n";
                         if (rt != 0) {
                             return rt;
                         }
@@ -151,7 +157,7 @@ class libps_class__ {
                     return ps_errs.NOT_ENOUGH_ARGUMENTS;
                 }
             } else if (action == "remattr") {
-                if (ARGCOUNT > 2) {
+                if (ARGCOUNT > 1) {
                     for (int i = 1; i < ARGCOUNT; i++) {
                         rt = del_attr(ARGS[i]);
                         if (rt != 0) {
@@ -191,8 +197,9 @@ class libps_class__ {
                     }
                 }
 
-                if (putattrin != -1) {
+                if (putattrin != -1 && !existed) {
                     ATTRLIST[putattrin] = attr;
+                    ATTRCOUNT++;
                 } else if (existed) {
                     ;
                 } else {
@@ -209,7 +216,8 @@ class libps_class__ {
         int del_attr(string attr) {
             for (int i = 0; i < LIBPS_ATTR_LIMIT; i++) {
                 if (ATTRLIST[i] == attr) {
-                    ATTRLIST[i] == "";
+                    ATTRLIST[i] = "";
+                    ATTRCOUNT--;
                     return 0;
                 }
             }
