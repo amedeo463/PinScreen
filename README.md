@@ -46,13 +46,14 @@ although it should already have made a build for Linux on x86-64 at that point
   - ATTRYN
   - ATTRSEL
   - ATTRMSEL
-  - ADDATTR [done, untested]
-  - REMATTR [done, untested]
+  - ADDATTR [DONE]
+  - REMATTR [DONE]
   - STOP [DONE]
   - ESTOP [DONE]
   - NOTHING [DONE]
 - Implement script execution
 - Implement script download
+- Implement temp and output directory [done, untested]
 - Fix openssl/ssl.h with windows issue
   - implement openssl compilation from makefile
 - Implement sections from PScrInt (parts of code that are executed only with certain attributes)
