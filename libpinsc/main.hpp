@@ -61,8 +61,8 @@ class libps_class__ {
         // Path to temp folder (TEMP:/)
         string TEMPDIR = "./pstemp";
 
+        // convert paths using OUT: and TEMP: to paths your system can understand
         string dirconv(string str_) {
-            // convert paths using OUT: and TEMP: to paths your system can understand
             string s_str_ = ps_misc.strip(str_);
             string ret;
             if (s_str_.substr(0,4) == "OUT:") {

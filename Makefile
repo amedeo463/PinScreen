@@ -111,7 +111,7 @@ fullrebuild: cleanup rebuild
 #	@$(MAKE)
 #
 
-debug:
+debug: $(TEMP)
 	@g++ debug.cpp -lcurl -o ./temp/ps-debug -I/usr/include/x86_64-linux-gnu
 ## ##
 
