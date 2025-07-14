@@ -55,6 +55,27 @@ class libps_class__ {
         // Number of currently active attributes.
         int ATTRCOUNT = 0;
 
+        // Path to output directory (OUT:/)
+        string OUTDIR = "./psout";
+
+        // Path to temp folder (TEMP:/)
+        string TEMPDIR = "./pstemp";
+
+        string dirconv(string str_) {
+            // convert paths using OUT: and TEMP: to paths your system can understand
+            string s_str_ = ps_misc.strip(str_);
+            string ret;
+            if (s_str_.substr(0,4) == "OUT:") {
+                ret = OUTDIR+s_str_.substr(4);
+            } else if (s_str_.substr(0,5) == "TEMP:") {
+                ret = TEMPDIR+s_str_.substr(5);
+            } else {
+                ret = s_str_;
+            }
+
+            return ret;
+        }
+
         // Parse a line of code
         int parse(string line) {
             string s_line = ps_misc.strip(line);
@@ -115,7 +136,7 @@ class libps_class__ {
                     return ps_errs.NOT_ENOUGH_ARGUMENTS; // not enough arguments
                 }
             } else if (action  == "copy") {
-                //TODO: test this
+                //TODO: test this with OUT: and TEMP:
                 if (ARGCOUNT == 3) {
                     if (!filesystem::is_directory(ARGS[1]) ) {
                         if (filesystem::is_directory(ARGS[2])) {

@@ -14,7 +14,7 @@ using namespace std;
 libps_class__ libps;
 
 
-// the structure looks like this because of future console support
+// the structure looks like this because of future game console support
 int main() {
     init();
 
