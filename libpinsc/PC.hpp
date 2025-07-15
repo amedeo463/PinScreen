@@ -28,16 +28,20 @@ class p_misc {
                 curl_easy_setopt(curl, CURLOPT_WRITEDATA, fsaves);
                 curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, dataWrite);
                 //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
-
-                curl_easy_perform(curl);
+                res = curl_easy_perform(curl);
+                cout << res;
                 fclose(fsaves);
                 curl_easy_cleanup(curl);
+                cout << res;
                 curl_global_cleanup();
             }
-
-            //fclose(fsaves); //if you uncomment this simple line, the program segfaults
-            return 0;
-            //TODO: fix and finish this function
+            cout << res;
+            if (res != CURLE_OK) {
+                return ps_errs.DOWNLOAD_FAIL;
+            } else {
+                return 0;
+            }
+            //TODO: add more errors about download fails
         }
 
     private:

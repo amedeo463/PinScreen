@@ -112,6 +112,7 @@ fullrebuild: cleanup rebuild
 #
 
 debug: $(TEMP)
+	@echo Building debug console
 	@g++ debug.cpp -lcurl -o ./temp/ps-debug -I/usr/include/x86_64-linux-gnu
 ## ##
 

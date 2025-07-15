@@ -28,7 +28,7 @@ class w_misc {
             ps_p_misc.waitForUser();
         }
         void download(string URL, string saveas) {
-            cout << "DOWNLOAD: " << saveas << " (" << URL << ")\n";
+            cout << "DOWNLOAD: " << URL << " --> " << saveas << "\n";
             ps_p_misc.download(URL, saveas);
         }
 };
@@ -66,9 +66,9 @@ class libps_class__ {
             string s_str_ = ps_misc.strip(str_);
             string ret;
             if (s_str_.substr(0,4) == "OUT:") {
-                ret = OUTDIR+s_str_.substr(4);
+                ret = OUTDIR+"/"+s_str_.substr(4);
             } else if (s_str_.substr(0,5) == "TEMP:") {
-                ret = TEMPDIR+s_str_.substr(5);
+                ret = TEMPDIR+"/"+s_str_.substr(5);
             } else {
                 ret = s_str_;
             }
@@ -130,10 +130,12 @@ class libps_class__ {
                 cout << "LOG: " << argstr << "\n";
             } else if (action == "download") {
                 // download a file from the internet
-                if (ARGCOUNT >= 2) { // check if there are enough arguments
-                    ps_w_misc.download(ARGS[1], ARGS[2]);
-                } else {
+                if (ARGCOUNT == 3) { // check if there are enough arguments
+                    ps_w_misc.download(ARGS[1], dirconv(ARGS[2]));
+                } else if (ARGCOUNT < 3) {
                     return ps_errs.NOT_ENOUGH_ARGUMENTS; // not enough arguments
+                } else {
+                    return ps_errs.TOO_MANY_ARGUMENTS;
                 }
             } else if (action  == "copy") {
                 //TODO: test this with OUT: and TEMP:

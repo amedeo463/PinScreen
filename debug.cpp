@@ -1,10 +1,10 @@
 // Debugging console I use to test instructions.
-// version code 01
+// version code 02
 
 #define LINUX
 
 #include "libpinsc/main.hpp"
-#include <bits/stdc++.h>
+#include "headers/extra.hpp"
 
 using namespace std;
 
@@ -13,6 +13,12 @@ libps_class__ libps;
 int main() {
     string comm, action;
     int code;
+
+    libps.OUTDIR = "./temp/out";
+    libps.TEMPDIR = "./temp/temp";
+
+    trymkdir(libps.OUTDIR);
+    trymkdir(libps.TEMPDIR);
 
     cout << "libpinsc debug console.\nuse 'help' for help.\n";
     while (true) {
