@@ -1,4 +1,4 @@
-// LIBPINSC v1.0
+// LIBPINSC v1.0 (incomplete)
 // A library to interpret PinsaScript
 
 // This is the main header.
@@ -27,9 +27,9 @@ class w_misc {
             cout << "Press " << BUTTON_CONFIRM << " to continue...\n";
             ps_p_misc.waitForUser();
         }
-        void download(string URL, string saveas) {
+        int download(string URL, string saveas) {
             cout << "DOWNLOAD: " << URL << " --> " << saveas << "\n";
-            ps_p_misc.download(URL, saveas);
+            return ps_p_misc.download(URL, saveas);
         }
 };
 w_misc ps_w_misc;
@@ -131,7 +131,7 @@ class libps_class__ {
             } else if (action == "download") {
                 // download a file from the internet
                 if (ARGCOUNT == 3) { // check if there are enough arguments
-                    ps_w_misc.download(ARGS[1], dirconv(ARGS[2]));
+                    rt = ps_w_misc.download(ARGS[1], dirconv(ARGS[2]));
                 } else if (ARGCOUNT < 3) {
                     return ps_errs.NOT_ENOUGH_ARGUMENTS; // not enough arguments
                 } else {
@@ -201,7 +201,7 @@ class libps_class__ {
                 return ps_errs.UNKNOWN_INSTRUCTION; // unknown instruction name
             }
 
-            return 0;
+            return rt;
         }
 
         // Adds an attribute to the attribute list. No effect if the attribute existed already.

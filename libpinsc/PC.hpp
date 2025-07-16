@@ -24,22 +24,21 @@ class p_misc {
             curl_global_init(CURL_GLOBAL_ALL);
             curl = curl_easy_init();
             if (curl) {
-                curl_easy_setopt(curl, CURLOPT_URL, URL.c_str());
-                curl_easy_setopt(curl, CURLOPT_WRITEDATA, fsaves);
-                curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, dataWrite);
-                //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L);
+                curl_easy_setopt(curl, CURLOPT_URL, URL.c_str()); // URL
+                curl_easy_setopt(curl, CURLOPT_WRITEDATA, fsaves); // pointer to the target where the data will be written
+                curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, dataWrite); // function to use for writing data
+                //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L); // verbose log
+                curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L); // follow redirects
                 res = curl_easy_perform(curl);
-                cout << res;
                 fclose(fsaves);
                 curl_easy_cleanup(curl);
-                cout << res;
                 curl_global_cleanup();
-            }
-            cout << res;
-            if (res != CURLE_OK) {
-                return ps_errs.DOWNLOAD_FAIL;
-            } else {
-                return 0;
+
+                if (res != CURLE_OK) {
+                    return ps_errs.DOWNLOAD_FAIL;
+                } else {
+                    return 0;
+                }
             }
             //TODO: add more errors about download fails
         }
