@@ -29,6 +29,7 @@ class p_misc {
                 curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, dataWrite); // function to use for writing data
                 //curl_easy_setopt(curl, CURLOPT_VERBOSE, 1L); // verbose log
                 curl_easy_setopt(curl, CURLOPT_FOLLOWLOCATION, 1L); // follow redirects
+                
                 res = curl_easy_perform(curl);
                 fclose(fsaves);
                 curl_easy_cleanup(curl);
