@@ -1,9 +1,11 @@
 # This makefile will compile binaries for all currently supported platforms #
+# LINUX ONLY #
 
 PREFIX = builds/PinScreen-
 #REQUESTS_C = ./libpinsc/cpr
 TEMP = ./temp
 MAIN_CPP = ./main.cpp
+LIBS = ./libs
 
 # All things that need to be built
 BUILD_TARGETS = $(PREFIX)linux-x86_64 \
@@ -17,14 +19,30 @@ all: prepwork
 
 
 ## Building preparations ##
-prepwork: $(MAIN_CPP) ./libpinsc $(TEMP) ./builds/
+prepwork: $(MAIN_CPP) ./libpinsc $(TEMP) ./builds/ $(LIBS) libdownload
 	@$(MAKE) $(BUILD_TARGETS)
 
 # Create temporary folder
 $(TEMP):
 	@echo Creating temp folder
 	@mkdir $(TEMP)
-#
+
+# Create builds folder
+./builds/:
+	@echo Creating builds folder
+	@mkdir $(@D)
+
+# Create library folder
+$(LIBS):
+	@echo Creating library folder
+	@mkdir $@
+	@mkdir $@/sources
+
+libdownload: $(LIBS)/sources/libcurl
+
+$(LIBS)/sources/libcurl:
+	@echo downloading libcurl
+	@git clone https://github.com/curl/curl.git $@
 
 # Download and modify requests.c (NOT USED ANYMORE)
 #$(REQUESTS_C):
@@ -37,10 +55,7 @@ $(TEMP):
 #	@sed -i'' -e 's/defined(_WIN32) || defined(WIN32)/defined(WINDOWS)/g' $(REQUESTS_C)/*.c
 #
 
-# Create builds folder
-./builds/:
-	@mkdir $(@D)
-## ##
+##
 
 
 ## Build targets ##
@@ -54,10 +69,18 @@ define BUILD_BIN
 # $(5): additional flags
 
 # Build binary
-$(PREFIX)$(1):
+$(PREFIX)$(1): $(LIBS)/$(3)/libcurl
 	@echo building for platform $(3)
 	@$(4) $(MAIN_CPP) -o $$@ -D $(2) -lcurl $(5)
 #
+
+$(LIBS)/$(3)/libcurl: $(LIBS)/$(3) $(LIBS)/sources/libcurl
+	@mkdir $$@
+	@#$(LIBS)/sources/libcurl/configure --with-openssl --host $(3)
+	@cmake -S $(LIBS)/sources/libcurl -B $$@
+
+$(LIBS)/$(3):
+	@mkdir $$@
 endef
 # NOT USED ANYMORE #
 ## Link library together
@@ -91,9 +114,13 @@ cleanup:
 #
 # Remove builds in build folder
 buildcleanup:
-	@echo Cleaning build folder
+	@echo Clearing build folder
 	@rm -rf builds/*
 #
+
+libcleanup:
+	@echo Clearing libs folder
+	@rm -rf $(LIBS)/*
 # do all
 fullcleanup: cleanup buildcleanup
 #
@@ -107,8 +134,8 @@ fullrebuild: cleanup rebuild
 	@$(MAKE)
 #
 # Reset repo to its original state and rebuild from scratch
-#fullestrebuild: libcleanup fullrebuild
-#	@$(MAKE)
+fullestrebuild: libcleanup fullrebuild
+	@$(MAKE)
 #
 
 debug: $(TEMP)
@@ -118,5 +145,5 @@ debug: $(TEMP)
 
 
 # phony targets
-.PHONY: cleanup buildcleanup libcleanup fullcleanup all prepwork rebuild fullrebuild fullestrebuild debug
+.PHONY: cleanup buildcleanup libcleanup fullcleanup all prepwork rebuild fullrebuild fullestrebuild debug libdownload
 #

@@ -6,6 +6,7 @@ The C++ successor of PScrInt, still a really big WIP.
 - a GNU/Linux system (I think you can use MSYS2 on Windows, but I'm not going to test that) with the following packages and the corresponding dependencies:
   - curl
   - libcurl4-openssl-dev
+  - libpsl-dev
   - g++-x86-64-linux-gnu
   - g++-mingw-w64-x86-64-posix
   - make
@@ -53,12 +54,15 @@ although it should already have made a build for Linux on x86-64 at that point
   - NOTHING [DONE]
 - Implement script execution
 - Implement script download
-- Implement temp and output directory [done, untested]
 - Fix openssl/ssl.h with windows issue
+  <s>
   - implement openssl compilation from makefile
+  </s>
+  - update makefile to automatically compile libcurl from source
 - Implement sections from PScrInt (parts of code that are executed only with certain attributes)
   - Implement attributes [DONE]
 - Implement platform restriction for scripts (A script could specify for what platform it was made - If such is attempted to be run on another platform, PinScreen will refuse to execute it)
 
 
 - Fix the makefile [DONE]
+- Implement temp and output directory [DONE]
