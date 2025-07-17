@@ -20,7 +20,7 @@ all: prepwork
 
 
 ## Building preparations ##
-prepwork: $(MAIN_CPP) ./libpinsc $(TEMP) ./builds/ $(LIBS) libdownload
+prepwork: $(MAIN_CPP) ./libpinsc $(TEMP) ./builds/ $(LIBS) $(LIBSOURCES) libdownload
 	@$(MAKE) $(BUILD_TARGETS)
 
 # Create temporary folder
@@ -37,11 +37,14 @@ $(TEMP):
 $(LIBS):
 	@echo Creating library folder
 	@mkdir $@
-	@mkdir $@/sources
 
-libdownload: $(LIBS)/sources/libcurl
+$(LIBSOURCES):
+	@echo Creating library sources folder
+	@mkdir $@
 
-$(LIBS)/sources/libcurl:
+libdownload: $(LIBSOURCES)/libcurl
+
+$(LIBSOURCES)/libcurl:
 	@echo downloading libcurl
 	@git clone https://github.com/curl/curl.git $@
 
@@ -84,9 +87,6 @@ $(LIBSOURCES)/libcurl:
 	@git clone https://github.com/curl/curl.git $$@
 
 $(LIBS)/$(3):
-	@mkdir $$@
-
-$(LIBSOURCES)/$(3):
 	@mkdir $$@
 endef
 # NOT USED ANYMORE #
