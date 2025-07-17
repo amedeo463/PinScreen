@@ -6,6 +6,7 @@ PREFIX = builds/PinScreen-
 TEMP = ./temp
 MAIN_CPP = ./main.cpp
 LIBS = ./libs
+LIBSOURCES = ./libsrc
 
 # All things that need to be built
 BUILD_TARGETS = $(PREFIX)linux-x86_64 \
@@ -67,6 +68,7 @@ define BUILD_BIN
 # $(3): OS with architecture
 # $(4): g++ Compiler invoke
 # $(5): additional flags
+# $(6): curl download name
 
 # Build binary
 $(PREFIX)$(1): $(LIBS)/$(3)/libcurl
@@ -74,12 +76,17 @@ $(PREFIX)$(1): $(LIBS)/$(3)/libcurl
 	@$(4) $(MAIN_CPP) -o $$@ -D $(2) -lcurl $(5)
 #
 
-$(LIBS)/$(3)/libcurl: $(LIBS)/$(3) $(LIBS)/sources/libcurl
+$(LIBS)/$(3)/libcurl: $(LIBS)/$(3) $(LIBSOURCES)/libcurl
 	@mkdir $$@
-	@#$(LIBS)/sources/libcurl/configure --with-openssl --host $(3)
-	@cmake -S $(LIBS)/sources/libcurl -B $$@
+	@echo building libcurl
+
+$(LIBSOURCES)/libcurl:
+	@git clone https://github.com/curl/curl.git $$@
 
 $(LIBS)/$(3):
+	@mkdir $$@
+
+$(LIBSOURCES)/$(3):
 	@mkdir $$@
 endef
 # NOT USED ANYMORE #
@@ -101,7 +108,11 @@ endef
 # #
 
 # Build macro calls for each build
-$(eval $(call BUILD_BIN,linux-x86_64,LINUX,linux-x86_64,x86_64-linux-gnu-g++,$(curl-config --static-libs) -I/usr/include/x86_64-linux-gnu))
+$(eval $(call BUILD_BIN,
+			linux-x86_64,
+			LINUX,linux-x86_64,
+			x86_64-linux-gnu-g++,
+			$(curl-config --static-libs) -I/usr/include/x86_64-linux-gnu,))
 $(eval $(call BUILD_BIN,windows-x86_64.exe,WINDOWS,windows-x86_64,x86_64-w64-mingw32-g++-posix,))
 #
 ## ##
