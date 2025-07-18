@@ -8,8 +8,9 @@ The C++ successor of PScrInt, still a really big WIP.
   - libcurl4-openssl-dev
   - libpsl-dev
   - g++-x86-64-linux-gnu
-  - g++-mingw-w64-x86-64-posix
+  - g++-mingw-w64-x86-64
   - make
+  - libtool
 
 Why these g++ cross-compilers in particular?
 Well... The list is going to grow a lot more in the future.
@@ -59,9 +60,11 @@ although it should already have made a build for Linux on x86-64 at that point
   - implement openssl compilation from makefile
   </s>
   - update makefile to automatically compile libcurl from source
+    - Automatically download libcurl
 - Implement sections from PScrInt (parts of code that are executed only with certain attributes)
   - Implement attributes [DONE]
 - Implement platform restriction for scripts (A script could specify for what platform it was made - If such is attempted to be run on another platform, PinScreen will refuse to execute it)
+- Make a main menu, either GUI or TUI (or both perhaps)
 
 
 - Fix the makefile [DONE]

@@ -45,20 +45,11 @@ $(LIBSOURCES):
 libdownload: $(LIBSOURCES)/libcurl
 
 $(LIBSOURCES)/libcurl:
-	@echo downloading libcurl
+	@echo Downloading libcurl
 	@git clone https://github.com/curl/curl.git $@
-
-# Download and modify requests.c (NOT USED ANYMORE)
-#$(REQUESTS_C):
-#	@echo Downloading requests.c library
-#	@git clone https://github.com/mactul/requests.c.git $(REQUESTS_C)
-#	
-#	@# Oh dear (remove the .git folder as it's useless)
-#	@rm -rf $@/.git
-#
-#	@sed -i'' -e 's/defined(_WIN32) || defined(WIN32)/defined(WINDOWS)/g' $(REQUESTS_C)/*.c
-#
-
+	@echo Generating configure file
+	@pwd
+	sh ./libconfigen.sh
 ##
 
 
@@ -69,50 +60,26 @@ define BUILD_BIN
 # $(1): final part of the file
 # $(2): OS class 
 # $(3): OS with architecture
-# $(4): g++ Compiler invoke
-# $(5): additional flags
-# $(6): curl download name
+# $(4): additional flags
 
 # Build binary
 $(PREFIX)$(1): $(LIBS)/$(3)/libcurl
 	@echo building for platform $(3)
-	@$(4) $(MAIN_CPP) -o $$@ -D $(2) -lcurl $(5)
+	@$(3)-g++ $(MAIN_CPP) -o $$@ -D $(2) -lcurl $(4)
 #
 
 $(LIBS)/$(3)/libcurl: $(LIBS)/$(3) $(LIBSOURCES)/libcurl
-	@mkdir $$@
-	@echo building libcurl
-
-$(LIBSOURCES)/libcurl:
-	@git clone https://github.com/curl/curl.git $$@
+	@echo building libcurl for $(3)
+	@$(LIBSOURCES)/libcurl/configure --host=$(3) --with-openssl
+	@cmake -S $(LIBSOURCES)/libcurl -B $$@ 
 
 $(LIBS)/$(3):
 	@mkdir $$@
+	@mkdir $$@/libcurl
 endef
-# NOT USED ANYMORE #
-## Link library together
-#$(TEMP)/$(3)/requests.a: $(TEMP)/$(3)/requests.o $(TEMP)/$(3)/utils.o $(TEMP)/$(3)/easy_tcp_tls.o $(TEMP)/$(3)/parser_tree.o
-#	@echo linking into $$@
-#	@ar cr $$@ $$^
-##
-## Compile C files into objects
-#
-#SOURCES = $(wildcard $(REQUESTS_C)/*.c)                             # AI made these two lines, and somehow made the makefile run
-#OBJECTS = $(patsubst $(REQUESTS_C)/%.c,$(TEMP)/$(3)/%.o,$(SOURCES)) # I'm not going to touch them until I find out how they work
-#
-#$(TEMP)/$(3)/%.o: $(REQUESTS_C)/%.c
-#	@mkdir -p $(TEMP)/$(3)/
-#	@echo Compiling $$^ to $$@
-#	@$(5) -c $$^ -o $$@ -Wall -Wextra -pedantic -O3 -DNDEBUG -D $(2) -I $(REQUESTS_C)/
-##
-# #
 
 # Build macro calls for each build
-$(eval $(call BUILD_BIN,
-			linux-x86_64,
-			LINUX,linux-x86_64,
-			x86_64-linux-gnu-g++,
-			$(curl-config --static-libs) -I/usr/include/x86_64-linux-gnu,))
+$(eval $(call BUILD_BIN,linux-x86_64,LINUX,x86_64-linux-gnu,$(curl-config --static-libs) -I/usr/include/x86_64-linux-gnu,))
 $(eval $(call BUILD_BIN,windows-x86_64.exe,WINDOWS,windows-x86_64,x86_64-w64-mingw32-g++-posix,))
 #
 ## ##
