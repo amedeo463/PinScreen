@@ -239,7 +239,7 @@ class libps_class__ {
                     return ps_errs.NOT_ENOUGH_ARGUMENTS;
                 }
 
-            } else if (action == "extract") {
+            } else if (action == "extract") { // This is going to be hard to implement (If I don't find a library for it)
             } else if (action == "attryn") {
             } else if (action == "attrsel") {
             } else if (action == "attrmsel") {
@@ -331,14 +331,29 @@ class libps_class__ {
         }
     
     // Seeing a ton of repeated code, wanted to make some functions to lighten source.
+    // Is it over-engineered? Probably, I don't know.
     private:
         // com mon
         // Dir ectory
         // Fun ction.
-        int comDirFun() {
+        int comDirFun(function<void(string)> func, bool requireEmpty = false) {
             if (ARGCOUNT >= 2) {
                 for (int i = 1; i < ARGCOUNT; i++) {
-
+                    if (filesystem::exists(ARGS[i])) {
+                        if (filesystem::is_directory(ARGS[i])) {
+                            if (filesystem::is_empty(ARGS[i]) || !requireEmpty) {
+                                try {
+                                    func(ARGS[i]); // Is this deep enough for you? Yeah I thought so...
+                                } catch (...) {
+                                    return ps_errs.GENERIC_ERROR;
+                                }
+                            }
+                        } else {
+                            return ps_errs.NOT_A_DIRECTORY;
+                        }
+                    } else {
+                        return ps_errs.DIRECTORY_NOT_FOUND;
+                    }
                 }
             } else {
                 return ps_errs.NOT_ENOUGH_ARGUMENTS;
@@ -350,18 +365,18 @@ class libps_class__ {
         // com mon
         // File
         // Fun ction.
-        int comFileFun() {
+        int comFileFun(function<void(string)> func) {
             if (ARGCOUNT >= 2) {
                 for (int i = 1; i < ARGCOUNT; i++) {
                     if (filesystem::exists(ARGS[i])) {
                         if (filesystem::is_regular_file(ARGS[i])) {
                             try {
-
+                                func(ARGS[i]);
                             } catch (...) {
                                 return ps_errs.GENERIC_ERROR; // failsafe, just in case
                             }
                         } else {
-                            return ps_errs.NOT_A_FILE;
+                            return ps_errs.NOT_A_REGULAR_FILE;
                         }
                     } else {
                         return ps_errs.FILE_NOT_FOUND;
@@ -373,4 +388,5 @@ class libps_class__ {
 
             return 0;
         }
+
 };
