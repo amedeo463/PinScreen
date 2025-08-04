@@ -117,7 +117,7 @@ class libps_class__ {
             // parse instruction
             parse(line);
             
-            // this one is used for return codes, (it's rt as in ReTurn)
+            // this one is used for return codes (it's rt as in ReTurn)
             int rt;
 
             // after obtaining all this info, we can finally interpret the line
@@ -158,11 +158,41 @@ class libps_class__ {
                 } else if (ARGCOUNT > 3) {
                     return ps_errs.TOO_MANY_ARGUMENTS;
                 }
-            } else if (action == "delete") {
-            } else if (action == "newdir") {
+            } else if (action == "delete" || action == "rm") {
+                if (ARGCOUNT >= 2) {
+                    for (int i = 0; i < ARGCOUNT; i++) {
+                        filesystem::remove(ARGS[i]);
+                    }
+                } else {
+                    return ps_errs.NOT_ENOUGH_ARGUMENTS;
+                }
+            } else if (action == "newdir" || action == "mkdir") {
+                if (ARGCOUNT >= 2) {
+                    for (int i = 1; i < ARGCOUNT; i++) {
+                        filesystem::create_directory(ARGS[i]);
+                    }
+                } else {
+                    return ps_errs.NOT_ENOUGH_ARGUMENTS;
+                }
+            } else if (action == "trynewdir" || action == "trymkdir") {
+                if (ARGCOUNT >= 2) {
+                    for (int i = 1; i < ARGCOUNT; i++) {
+                        ps_misc.trymkdir(ARGS[i]);
+                    }
+                } else {
+                    return ps_errs.NOT_ENOUGH_ARGUMENTS;
+                }
             } else if (action == "copydir") {
-            } else if (action == "deldir") {
-            } else if (action == "rdeldir") {
+            } else if (action == "deldir" || action == "rmdir") {
+            } else if (action == "trydeldir" || action == "tryrmdir") {
+                if (ARGCOUNT >= 2) {
+                    for (int i = 1; i < ARGCOUNT; i++) {
+                        ; //TODO: I still have not implemented a function for this, damn it
+                    }
+                } else {
+                    return ps_errs.NOT_ENOUGH_ARGUMENTS;
+                }
+            } else if (action == "rdeldir" || action == "rrmdir") {
             } else if (action == "extract") {
             } else if (action == "attryn") {
             } else if (action == "attrsel") {

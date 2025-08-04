@@ -54,4 +54,18 @@ class _misc {
             /// 1.2 strip the thing and return
             return line.substr(cmdstart, cmdend-cmdstart);
         }
+    
+    void trymkdir(string path__) {
+        // Creates a directory if it does not exist
+        if (!filesystem::exists(path__)) {
+            filesystem::create_directory(path__);
+        }  
+    }
+
+    void tryrm(string path__) {
+        // removes an empty diretory if it exists
+        if (filesystem::exists(path__)) {
+            filesystem::remove(path__);
+        }
+    }
 };
