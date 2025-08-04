@@ -44,7 +44,7 @@ although it should already have made a build for Linux on x86-64 at that point
   - NEWDIR [done, untested]
   - COPYDIR
   - DELDIR
-  - RDELDIR
+  - RDELDIR [done, untested]
   - EXTRACT
   - ATTRYN
   - ATTRSEL
@@ -63,6 +63,8 @@ although it should already have made a build for Linux on x86-64 at that point
   - tryrmdir (trydeldir alias) [DONE]
   - rrmdir (rdeldir alias) [DONE]
   - rm (delete alias) [DONE]
+  - tryrdeldir
+  - tryrrmdir (tryrdeldir alias)
 - Implement script execution
   - Implement sections from PScrInt (parts of code that are executed only with certain attributes)
     - Implement attributes [DONE]

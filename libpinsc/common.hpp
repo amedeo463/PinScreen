@@ -63,9 +63,16 @@ class _misc {
     }
 
     void tryrm(string path__) {
-        // removes an empty diretory if it exists
+        // removes a file or an empty diretory if it exists
         if (filesystem::exists(path__)) {
             filesystem::remove(path__);
+        }
+    }
+
+    void tryrrmdir(string path__) {
+        // removes a directory and its contents, recursively
+        if (filesystem::exists(path__)) {
+            filesystem::remove_all(path__);
         }
     }
 };

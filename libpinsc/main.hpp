@@ -118,16 +118,20 @@ class libps_class__ {
             parse(line);
             
             // this one is used for return codes (it's rt as in ReTurn)
-            int rt;
+            int rt = 0;
+
 
             // after obtaining all this info, we can finally interpret the line
+            //TODO: some instructions use the same code, I wonder If I can unite them in a function
             if (action == "notice") {
                 // tell the user something and wait for it to hit the CONFIRM key
                 cout << "NOTICE: " << argstr << "\n";
                 ps_w_misc.waitForUser();
+
             } else if (action == "log") {
                 // show a simple message on screen
                 cout << "LOG: " << argstr << "\n";
+
             } else if (action == "download") {
                 // download a file from the internet
                 if (ARGCOUNT == 3) { // check if there are enough arguments
@@ -137,6 +141,7 @@ class libps_class__ {
                 } else {
                     return ps_errs.TOO_MANY_ARGUMENTS;
                 }
+
             } else if (action  == "copy") {
                 //TODO: test this with OUT: and TEMP:
                 if (ARGCOUNT == 3) {
@@ -158,6 +163,7 @@ class libps_class__ {
                 } else if (ARGCOUNT > 3) {
                     return ps_errs.TOO_MANY_ARGUMENTS;
                 }
+
             } else if (action == "delete" || action == "rm") {
                 if (ARGCOUNT >= 2) {
                     for (int i = 0; i < ARGCOUNT; i++) {
@@ -166,6 +172,7 @@ class libps_class__ {
                 } else {
                     return ps_errs.NOT_ENOUGH_ARGUMENTS;
                 }
+
             } else if (action == "newdir" || action == "mkdir") {
                 if (ARGCOUNT >= 2) {
                     for (int i = 1; i < ARGCOUNT; i++) {
@@ -174,6 +181,7 @@ class libps_class__ {
                 } else {
                     return ps_errs.NOT_ENOUGH_ARGUMENTS;
                 }
+
             } else if (action == "trynewdir" || action == "trymkdir") {
                 if (ARGCOUNT >= 2) {
                     for (int i = 1; i < ARGCOUNT; i++) {
@@ -182,8 +190,25 @@ class libps_class__ {
                 } else {
                     return ps_errs.NOT_ENOUGH_ARGUMENTS;
                 }
+
             } else if (action == "copydir") {
             } else if (action == "deldir" || action == "rmdir") {
+                if (ARGCOUNT >= 2) {
+                    for (int i = 1; i < ARGCOUNT; i++) {
+                        if (filesystem::exists(ARGS[i])) {
+                            if (filesystem::is_empty(ARGS[i])) {
+                                filesystem::remove(ARGS[i]);
+                            } else {
+                                return ps_errs.DIRECTORY_NOT_EMPTY;
+                            }
+                        } else {
+                            return ps_errs.DIRECTORY_NOT_FOUND;
+                        }
+                    }
+                } else {
+                    return ps_errs.NOT_ENOUGH_ARGUMENTS;
+                }
+
             } else if (action == "trydeldir" || action == "tryrmdir") {
                 if (ARGCOUNT >= 2) {
                     for (int i = 1; i < ARGCOUNT; i++) {
@@ -192,7 +217,28 @@ class libps_class__ {
                 } else {
                     return ps_errs.NOT_ENOUGH_ARGUMENTS;
                 }
+
             } else if (action == "rdeldir" || action == "rrmdir") {
+                if (ARGCOUNT >= 2) {
+                    for (int i = 1; i < ARGCOUNT; i++) {
+                        if (filesystem::is_directory(ARGS[i])) {
+                            if (filesystem::exists(ARGS[i])) {
+                                try {
+                                    filesystem::remove_all(ARGS[i]);
+                                } catch (...) {
+                                    return ps_errs.GENERIC_ERROR; // Failsafe
+                                }
+                            } else {
+                                return ps_errs.DIRECTORY_NOT_FOUND;
+                            }
+                        } else {
+                            return ps_errs.NOT_A_DIRECTORY;
+                        }
+                    }
+                } else {
+                    return ps_errs.NOT_ENOUGH_ARGUMENTS;
+                }
+
             } else if (action == "extract") {
             } else if (action == "attryn") {
             } else if (action == "attrsel") {
@@ -209,6 +255,7 @@ class libps_class__ {
                 } else {
                     return ps_errs.NOT_ENOUGH_ARGUMENTS;
                 }
+
             } else if (action == "remattr") {
                 if (ARGCOUNT > 1) {
                     for (int i = 1; i < ARGCOUNT; i++) {
@@ -220,16 +267,21 @@ class libps_class__ {
                 } else {
                     return ps_errs.NOT_ENOUGH_ARGUMENTS;
                 }
+
             } else if (action == "stop") {
                 return ps_errs.SCRIPT_STOPPED; // script stopped (no error)
+
             } else if (action == "estop") {
                 cout << "ERROR: " << argstr << "\n";
                 return ps_errs.SCRIPT_STOPPED_ERROR; // script stopped (an error occoured)
+
             } else if (action == "nothing") {
                 ;
+
             } else {
                 return ps_errs.UNKNOWN_INSTRUCTION; // unknown instruction name
             }
+
 
             return rt;
         }
@@ -278,4 +330,47 @@ class libps_class__ {
             return ps_errs.ATTR_NOT_FOUND;
         }
     
+    // Seeing a ton of repeated code, wanted to make some functions to lighten source.
+    private:
+        // com mon
+        // Dir ectory
+        // Fun ction.
+        int comDirFun() {
+            if (ARGCOUNT >= 2) {
+                for (int i = 1; i < ARGCOUNT; i++) {
+
+                }
+            } else {
+                return ps_errs.NOT_ENOUGH_ARGUMENTS;
+            }
+
+            return 0;
+        }
+
+        // com mon
+        // File
+        // Fun ction.
+        int comFileFun() {
+            if (ARGCOUNT >= 2) {
+                for (int i = 1; i < ARGCOUNT; i++) {
+                    if (filesystem::exists(ARGS[i])) {
+                        if (filesystem::is_regular_file(ARGS[i])) {
+                            try {
+
+                            } catch (...) {
+                                return ps_errs.GENERIC_ERROR; // failsafe, just in case
+                            }
+                        } else {
+                            return ps_errs.NOT_A_FILE;
+                        }
+                    } else {
+                        return ps_errs.FILE_NOT_FOUND;
+                    }
+                }
+            } else {
+                return ps_errs.NOT_ENOUGH_ARGUMENTS;
+            }
+
+            return 0;
+        }
 };
