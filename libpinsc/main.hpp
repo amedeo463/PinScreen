@@ -210,36 +210,43 @@ class libps_class__ {
                 }
 
             } else if (action == "trydeldir" || action == "tryrmdir") {
+                // Actually I don't think I needed any additional function
                 if (ARGCOUNT >= 2) {
                     for (int i = 1; i < ARGCOUNT; i++) {
-                        ; //TODO: I still have not implemented a function for this, damn it
+                        rt = comDirFun(ARGS[i]);
+
+                        if (rt == 0) {
+                            try {
+                                filesystem::remove(ARGS[i]);
+                            } catch (...) {
+                                return ps_errs.GENERIC_ERROR;
+                            }
+                        } else {
+                            break;
+                        }
                     }
-                } else {
-                    return ps_errs.NOT_ENOUGH_ARGUMENTS;
                 }
 
             } else if (action == "rdeldir" || action == "rrmdir") {
+                // My current C++ skills can't make this any shorter
                 if (ARGCOUNT >= 2) {
                     for (int i = 1; i < ARGCOUNT; i++) {
-                        if (filesystem::is_directory(ARGS[i])) {
-                            if (filesystem::exists(ARGS[i])) {
-                                try {
-                                    filesystem::remove_all(ARGS[i]);
-                                } catch (...) {
-                                    return ps_errs.GENERIC_ERROR; // Failsafe
-                                }
-                            } else {
-                                return ps_errs.DIRECTORY_NOT_FOUND;
+                        rt = comDirFun(ARGS[i]);
+
+                        if (rt == 0) {
+                            try {
+                                filesystem::remove_all(ARGS[i]);
+                            } catch (...) {
+                                return ps_errs.GENERIC_ERROR;
                             }
                         } else {
-                            return ps_errs.NOT_A_DIRECTORY;
+                            break;
                         }
                     }
                 } else {
                     return ps_errs.NOT_ENOUGH_ARGUMENTS;
                 }
-
-            } else if (action == "extract") { // This is going to be hard to implement (If I don't find a library for it)
+            } else if (action == "extract") { // This is going to be hard to implement (If I don't find a library for it) (oh boy)
             } else if (action == "attryn") {
             } else if (action == "attrsel") {
             } else if (action == "attrmsel") {
@@ -332,31 +339,21 @@ class libps_class__ {
     
     // Seeing a ton of repeated code, wanted to make some functions to lighten source.
     // Is it over-engineered? Probably, I don't know.
-    private:
+    //private:
         // com mon
         // Dir ectory
         // Fun ction.
-        int comDirFun(function<void(string)> func, bool requireEmpty = false) {
-            if (ARGCOUNT >= 2) {
-                for (int i = 1; i < ARGCOUNT; i++) {
-                    if (filesystem::exists(ARGS[i])) {
-                        if (filesystem::is_directory(ARGS[i])) {
-                            if (filesystem::is_empty(ARGS[i]) || !requireEmpty) {
-                                try {
-                                    func(ARGS[i]); // Is this deep enough for you? Yeah I thought so...
-                                } catch (...) {
-                                    return ps_errs.GENERIC_ERROR;
-                                }
-                            }
-                        } else {
-                            return ps_errs.NOT_A_DIRECTORY;
-                        }
-                    } else {
-                        return ps_errs.DIRECTORY_NOT_FOUND;
+        int comDirFun(string path__, bool requireEmpty = false) {
+            if (filesystem::exists(path__)) {
+                if (filesystem::is_directory(path__)) {
+                    if (filesystem::is_empty(path__) || !requireEmpty) {
+                        return 0;
                     }
+                } else {
+                    return ps_errs.NOT_A_DIRECTORY;
                 }
             } else {
-                return ps_errs.NOT_ENOUGH_ARGUMENTS;
+                return ps_errs.DIRECTORY_NOT_FOUND;
             }
 
             return 0;
@@ -365,16 +362,12 @@ class libps_class__ {
         // com mon
         // File
         // Fun ction.
-        int comFileFun(function<void(string)> func) {
+        int comFileFun(string path__) {
             if (ARGCOUNT >= 2) {
                 for (int i = 1; i < ARGCOUNT; i++) {
                     if (filesystem::exists(ARGS[i])) {
                         if (filesystem::is_regular_file(ARGS[i])) {
-                            try {
-                                func(ARGS[i]);
-                            } catch (...) {
-                                return ps_errs.GENERIC_ERROR; // failsafe, just in case
-                            }
+                            return 0;
                         } else {
                             return ps_errs.NOT_A_REGULAR_FILE;
                         }
@@ -388,5 +381,4 @@ class libps_class__ {
 
             return 0;
         }
-
 };
