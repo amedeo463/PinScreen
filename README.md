@@ -88,3 +88,5 @@ although it should already have made a build for Linux on x86-64 at that point
 # Other notes
 4th August 2025 (#1): I apologize for making no progress in a month
 4th August 2025 (#2): Actually, I might have to compile OpenSSL from source via makefile
+6th August 2025 (#3): Wait, let me check -- okay so it was not a month it was 17 days (two weeks + three days)
+6th August 2025 (#4): I hope my laptop won't break (permanently), because if it does - oh boy - Progress will slow down A TON. Wish me luck.
