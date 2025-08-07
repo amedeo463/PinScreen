@@ -61,6 +61,9 @@ class libps_class__ {
         // Path to temp folder (TEMP:/)
         string TEMPDIR = "./pstemp";
 
+        // temporary variables
+        string temp_1, temp_2;
+
         // convert paths using OUT: and TEMP: to paths your system can understand
         string dirconv(string str_) {
             string s_str_ = ps_misc.strip(str_);
@@ -135,11 +138,12 @@ class libps_class__ {
             } else if (action == "download") {
                 // download a file from the internet
                 if (ARGCOUNT == 3) { // check if there are enough arguments
-                    try {
-                        rt = ps_w_misc.download(ARGS[1], dirconv(ARGS[2]));
-                    } catch (...) {
-                        return ps_errs.GENERIC_ERROR;
-                    }
+                    if (/*filesystem::exists()*/ 0)
+                        try {
+                            rt = ps_w_misc.download(ARGS[1], dirconv(ARGS[2]));
+                        } catch (...) {
+                            return ps_errs.GENERIC_ERROR;
+                        }
                 } else if (ARGCOUNT < 3) {
                     return ps_errs.NOT_ENOUGH_ARGUMENTS; // not enough arguments
                 } else {
@@ -148,8 +152,20 @@ class libps_class__ {
 
             } else if (action  == "copy") {
                 //TODO: test this with OUT: and TEMP:
+                
                 if (ARGCOUNT == 3) {
-                    if (!filesystem::is_directory(ARGS[1]) ) {
+                    temp_1 = dirconv(ARGS[1]);
+                    temp_2 = dirconv(ARGS[2]);
+
+                    if (!filesystem::exists(temp_1)) {
+                        return ps_errs.FILE_NOT_FOUND;
+                    }
+
+                    if (!filesystem::exists(temp_2)) {
+                        return ps_errs.DIRECTORY_NOT_FOUND;
+                    }
+
+                    if (!filesystem::is_directory(ARGS[1])) {
                         if (filesystem::is_directory(ARGS[2])) {
                             try {
                                 filesystem::copy(ARGS[1], ARGS[2]);
@@ -160,7 +176,7 @@ class libps_class__ {
                             return ps_errs.NOT_A_DIRECTORY; // not a directory
                         }
                     } else {
-                        return ps_errs.IS_DIRECTORY; // is a directory (please anything but a directory)
+                        return ps_errs.NOT_A_REGULAR_FILE; // is a directory (please anything but a directory)
                     }
                 } else if (ARGCOUNT < 3) {
                     return ps_errs.NOT_ENOUGH_ARGUMENTS;
@@ -217,14 +233,16 @@ class libps_class__ {
             } else if (action == "deldir" || action == "rmdir") {
                 if (ARGCOUNT >= 2) {
                     for (int i = 1; i < ARGCOUNT; i++) {
-                        if (filesystem::exists(ARGS[i])) {
-                            if (filesystem::is_empty(ARGS[i])) {
+                        rt = comDirFun(ARGS[i], true);
+
+                        if (rt == 0) {
+                            try {
                                 filesystem::remove(ARGS[i]);
-                            } else {
-                                return ps_errs.DIRECTORY_NOT_EMPTY;
+                            } catch (...) {
+                                return ps_errs.GENERIC_ERROR;
                             }
                         } else {
-                            return ps_errs.DIRECTORY_NOT_FOUND;
+                            break;
                         }
                     }
                 } else {
