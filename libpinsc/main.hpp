@@ -135,7 +135,11 @@ class libps_class__ {
             } else if (action == "download") {
                 // download a file from the internet
                 if (ARGCOUNT == 3) { // check if there are enough arguments
-                    rt = ps_w_misc.download(ARGS[1], dirconv(ARGS[2]));
+                    try {
+                        rt = ps_w_misc.download(ARGS[1], dirconv(ARGS[2]));
+                    } catch (...) {
+                        return ps_errs.GENERIC_ERROR;
+                    }
                 } else if (ARGCOUNT < 3) {
                     return ps_errs.NOT_ENOUGH_ARGUMENTS; // not enough arguments
                 } else {
@@ -167,7 +171,17 @@ class libps_class__ {
             } else if (action == "delete" || action == "rm") {
                 if (ARGCOUNT >= 2) {
                     for (int i = 0; i < ARGCOUNT; i++) {
-                        filesystem::remove(ARGS[i]);
+                        rt = comFileFun(ARGS[i]);
+
+                        if (rt == 0) {
+                            try {
+                                filesystem::remove(ARGS[i]);
+                            } catch (...) {
+                                return ps_errs.GENERIC_ERROR;
+                            }
+                        } else {
+                            break;
+                        }
                     }
                 } else {
                     return ps_errs.NOT_ENOUGH_ARGUMENTS;
@@ -176,7 +190,15 @@ class libps_class__ {
             } else if (action == "newdir" || action == "mkdir") {
                 if (ARGCOUNT >= 2) {
                     for (int i = 1; i < ARGCOUNT; i++) {
-                        filesystem::create_directory(ARGS[i]);
+                        if (!filesystem::exists(ARGS[i])) {
+                            try {
+                                filesystem::create_directory(ARGS[i]);
+                            } catch (...) {
+                                return ps_errs.GENERIC_ERROR;
+                            }
+                        } else {
+                            return ps_errs.DIRECTORY_EXISTS;
+                        }
                     }
                 } else {
                     return ps_errs.NOT_ENOUGH_ARGUMENTS;
@@ -213,18 +235,10 @@ class libps_class__ {
                 // Actually I don't think I needed any additional function
                 if (ARGCOUNT >= 2) {
                     for (int i = 1; i < ARGCOUNT; i++) {
-                        rt = comDirFun(ARGS[i]);
-
-                        if (rt == 0) {
-                            try {
-                                filesystem::remove(ARGS[i]);
-                            } catch (...) {
-                                return ps_errs.GENERIC_ERROR;
-                            }
-                        } else {
-                            break;
-                        }
+                        ps_misc.tryrm(ARGS[i]);
                     }
+                } else {
+                    return ps_errs.NOT_ENOUGH_ARGUMENTS;
                 }
 
             } else if (action == "rdeldir" || action == "rrmdir") {
