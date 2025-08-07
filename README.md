@@ -35,15 +35,15 @@ although it should already have made a build for Linux on x86-64 at that point
 - Use libpinsc to make a PinsaScript compiler (could call it PinComp or something)
 
 ## TODO:
-- Implement all instructions I previously implemented on PScrInt
+- Implement all instructions I previously implemented on PScrInt (asterisks indicate instructions that need more debugging)
   - NOTICE [DONE]
   - LOG [DONE]
-  - DOWNLOAD [DONE]
-  - COPY [DONE]
+  - DOWNLOAD [DONE]*
+  - COPY [DONE]*
   - DELETE [done, untested]
   - NEWDIR [done, untested]
   - COPYDIR
-  - DELDIR
+  - DELDIR [done, untested]
   - RDELDIR [done, untested]
   - EXTRACT
   - ATTRYN
