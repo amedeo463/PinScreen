@@ -54,17 +54,17 @@ although it should already have made a build for Linux on x86-64 at that point
   - STOP [DONE]
   - ESTOP [DONE]
   - NOTHING [DONE]
-- Implement aliases and new commands that were not in PScrInt
+- Implement aliases and new commands that were not in PScrInt (asterisks indicate instructions that need more debugging)
   - mkdir (newdir alias) [DONE]
   - trynewdir [done, untested]
-  - trymkdir [DONE]
+  - trymkdir [DONE]*
   - rmdir (deldir alias) [DONE]
-  - trydeldir [WIP]
+  - trydeldir [done, untested]
   - tryrmdir (trydeldir alias) [DONE]
   - rrmdir (rdeldir alias) [DONE]
   - rm (delete alias) [DONE]
   - tryrdeldir
-  - tryrrmdir (tryrdeldir alias)
+  - tryrrmdir (tryrdeldir alias) [DONE]
 - Implement script execution
   - Implement sections from PScrInt (parts of code that are executed only with certain attributes)
     - Implement attributes [DONE]
