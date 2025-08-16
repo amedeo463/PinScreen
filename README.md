@@ -87,7 +87,15 @@ although it should already have made a build for Linux on x86-64 at that point
 
 # Other notes
 4th August 2025 (#1): I apologize for making no progress in a month
+
 4th August 2025 (#2): Actually, I might have to compile OpenSSL from source via makefile
+
 6th August 2025 (#3): Wait, let me check -- okay so it was not a month it was 17 days (two weeks + three days)
+
 6th August 2025 (#4): I hope my laptop won't break (permanently), because if it does - oh boy - Progress will slow down A TON. Wish me luck.
+
 7th August 2025 (#5): The exec() function in main.hpp is a mess, considering to refactor it a little
+
+16th August 2025 (#6): I should consider archiving this repo, because why make an automated file manager when you can make a compilable "shell" language for both Windows and Linux?
+
+16th August 2025 (#7): No, my laptop didn't break, I just don't have much time to spend into this project currently.
